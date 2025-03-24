@@ -1,13 +1,18 @@
 const { matchedData } = require("express-validator");
 const { handleHttpError } = require("../utils/handleError");
-const { registerUser, verifyUserCode, loginUser, forgotPassword, resetPassword } = require("../services/auth");
-const { clearAuthCookie } = require("../utils/handleJwt");
+const { 
+    registerUser, 
+    verifyUserCode, 
+    loginUser, 
+    forgotPassword, 
+    resetPassword,
+    refreshTokenService,
+    logoutUser } = require("../services/auth");
 
 const registerCtrl = async (req, res) => {
     try {
-        const cleanData = matchedData(req); // Extraemos los datos validados
-        const data = await registerUser(cleanData); // Llama al servicio
-    
+        const cleanData = matchedData(req);
+        const data = await registerUser(cleanData);
         res.status(201).send(data);
     } catch (err) {
         if (err.status === 409) {
@@ -33,8 +38,17 @@ const verifyEmailCtrl = async (req, res) => {
 const loginCtrl = async (req, res) => {
     try {
         const { email, password } = matchedData(req);
-        const result = await loginUser(email, password);
-        res.status(200).json(result);
+        const { user, accessToken, refreshToken } = await loginUser(email, password);
+
+        // Establecemos el Refresh Token en una cookie HttpOnly
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: 'Strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000 
+        });
+
+        res.status(200).json({ user, accessToken });
     } catch (err) {
         handleHttpError(res, err.message, err.status || 400);
     }
@@ -60,15 +74,40 @@ const resetPasswordCtrl = async (req, res) => {
     }
 };
 
-const logoutCtrl = (req, res) => {
+const refreshTokenCtrl = async (req, res) => {
     try {
-        clearAuthCookie(res);
-        res.status(200).json({ message: 'Sesión cerrada correctamente.' });
-    } catch (error) {
-        res.status(500).json({ message: 'Error al cerrar sesión' });
+        const { refreshToken } = req.cookies;
+        if (!refreshToken) throw { status: 403, message: "NO_REFRESH_TOKEN_PROVIDED" };
+
+        const userId = req.user?._id; 
+        if (!userId) throw { status: 403, message: "INVALID_USER" };
+
+        const { accessToken } = await refreshTokenService(userId, refreshToken);
+        res.status(200).json({ accessToken });
+    } catch (err) {
+        handleHttpError(res, err.message, err.status || 403);
     }
 };
 
+const logoutCtrl = async (req, res) => {
+    try {
+        const userId = req.user?._id;
+        if (!userId) throw { status: 403, message: "INVALID_USER" };
 
+        // Eliminamos el Refresh Token de Redis
+        const result = await logoutUser(userId);
 
-module.exports = { registerCtrl, verifyEmailCtrl, loginCtrl, forgotPasswordCtrl, resetPasswordCtrl, logoutCtrl };
+        // Limpiamos la cookie del Refresh Token
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Strict'
+        });
+
+        res.status(200).json(result);
+    } catch (error) {
+        handleHttpError(res, error.message, error.status || 500);
+    }
+};
+
+module.exports = { registerCtrl, verifyEmailCtrl, loginCtrl, forgotPasswordCtrl, resetPasswordCtrl, refreshTokenCtrl, logoutCtrl };

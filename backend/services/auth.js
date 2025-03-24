@@ -1,6 +1,13 @@
 const User = require('../models/nosql/user');
 const { encrypt, compare } = require('../utils/handlePassword');
-const { tokenSign } = require('../utils/handleJwt');
+const { 
+    generateAccessToken,
+    generateRefreshToken, 
+    saveRefreshToken, 
+    getRefreshToken, 
+    deleteRefreshToken,
+    verifyRefreshToken
+    } = require('../utils/handleJwt');
 const { sendEmail } = require('../utils/handleEmail');
 const crypto = require('crypto');
 
@@ -23,8 +30,8 @@ const registerUser = async (userData) => {
         // Oculta la contraseña en la respuesta
         newUser.set("password", undefined, { strict: false });
 
-        // Genera token JWT
-        const token = await tokenSign(newUser);
+        // Genera token de acceso JWT
+        const accessToken = generateAccessToken(newUser);
 
         // Envia email de verificación
         sendEmail({
@@ -35,10 +42,10 @@ const registerUser = async (userData) => {
         })
         
         // Devuelve el usuario y el token
-        return { user: newUser, token };
+        return { user: newUser, accessToken };
     } catch (error) {
         console.error("Error al crear usuario:", error);
-        // Si el email ya existe, devuelve un error 409
+        // Si el email o nikname ya existe, devuelve un error 409
         if (error.code === 11000) {
             if (error.keyValue.nickname) {
                 throw { status: 409, message: "NICKNAME_ALREADY_EXISTS" };
@@ -95,22 +102,25 @@ const loginUser = async (email, password) => {
         // Busca al usuario por email en la db
         const user = await User.findOne({ email });
 
-        if (!user) {
-            throw { status: 404, message: "USER_NOT_FOUND" };
-        }
+        if (!user) { throw { status: 404, message: "USER_NOT_FOUND" }; }
+
+        if (!user.emailVerified) { throw { status: 403, message: "EMAIL_NOT_VERIFIED" }; }
 
         // Compara la contraseña introducida con la almacenada
         const isPasswordValid = await compare(password, user.password);
         
-        if (!isPasswordValid) {
-            throw { status: 401, message: "INVALID_CREDENTIALS" };
-        }
+        if (!isPasswordValid) { throw { status: 401, message: "INVALID_CREDENTIALS" }; }
 
-        // Genera token JWT y devuelve el usuario logueado
-        const token = await tokenSign(user);
+        // Genera tokens
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
+
+        // Guardamos el refresh token en Redis
+        await saveRefreshToken(user._id, refreshToken);
+
         user.set("password", undefined, { strict: false });
 
-        return { user, token };
+        return { user, accessToken, refreshToken };
     } catch (error) {
         console.log("❌ Error en login:", error);
         throw error;
@@ -135,7 +145,7 @@ const forgotPassword = async (email) => {
         await user.save();
 
         // URL del frontend para el cambio de contraseña
-        const resetLink = `https://localhost:8080/reset-password?token=${resetToken}&email=${user.email}`;
+        const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${user.email}`;
 
         await sendEmail({
             to: user.email,
@@ -188,4 +198,46 @@ const resetPassword = async (token, password) => {
     }
 };
 
-module.exports = { registerUser, verifyUserCode, loginUser, forgotPassword, resetPassword };
+/**
+ * Refresca el Access Token con el Refresh Token
+ * @param {String} userId - ID del usuario
+ * @param {String} refreshToken - Refresh Token
+ * @returns - Nuevo Access Token
+ */
+const refreshTokenService = async (userId, refreshToken) => {
+    try {
+        // Verificamos el refresh token
+        const isValidToken = verifyRefreshToken(refreshToken);
+        if (!isValidToken) throw { status: 403, message: "INVALID_REFRESH_TOKEN" };
+
+        // Obtenemos el token guardado en Redis
+        const storedToken = await getRefreshToken(userId);
+        if (storedToken !== refreshToken) {
+            throw { status: 403, message: "REFRESH_TOKEN_MISMATCH" };
+        }
+
+        // Generamos nuevo Access Token
+        const newAccessToken = generateAccessToken({ _id: userId });
+        return { accessToken: newAccessToken };
+    } catch (error) {
+        console.error("❌ Error en refreshTokenService:", error);
+        throw error;
+    }
+};
+
+/**
+ * Cierra la sesión del usuario eliminando el Refresh Token
+ * @param {String} userId - ID del usuario
+ * 
+ */
+const logoutUser = async (userId) => {
+    try {
+        await deleteRefreshToken(userId);
+        return { message: "LOGOUT_SUCCESSFUL" };
+    } catch (error) {
+        console.error("❌ Error en logoutUser:", error);
+        throw error;
+    }
+};
+
+module.exports = { registerUser, verifyUserCode, loginUser, forgotPassword, resetPassword, refreshTokenService, logoutUser };
