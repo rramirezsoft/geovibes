@@ -1,0 +1,139 @@
+@baseUrl = http://localhost:3000
+@authToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RmMTBmYjg5ODI5NTM4YWU4YjMyMTQiLCJpYXQiOjE3NDI2NzczMTEsImV4cCI6MTc0MjY4NDUxMX0.YQfDiqhmkFYwuYOCBTDgthiZR_CkXTn9YHLPBMvZl2g
+@nikname = raulitox4
+
+### Registro de usuario con rol de user
+POST {{baseUrl}}/api/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "nickname": "raulitox4",
+  "email": "rramirezsoft@gmail.com",
+  "password": "1234567890"
+}
+
+### Validacion del email
+PUT {{baseUrl}}/api/auth/validate HTTP/1.1
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+  "verificationCode": "246314"
+}
+
+### Login
+POST {{baseUrl}}/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "rramirezsoft@gmail.com",
+  "password": "1234567890"
+}
+
+### Completar registro de usuario con foto de perfil
+PUT {{baseUrl}}/api/users/complete-register HTTP/1.1
+Content-Type: multipart/form-data; boundary=Boundry
+Authorization: {{authToken}}
+
+--Boundry
+Content-Disposition: form-data; name="name"
+Content-Type: text/plain
+
+Raúl
+--Boundry
+Content-Disposition: form-data; name="lastName"
+Content-Type: text/plain
+
+Ramírez Adarve
+--Boundry
+Content-Disposition: form-data; name="birthDate"
+Content-Type: text/plain
+
+2003-09-29
+--Boundry
+Content-Disposition: form-data; name="profilePicture"; filename="profile.png"
+Content-Type: image/png
+
+< ./profile.png
+--Boundry--
+
+### Completar registro de usuario sin foto de perfil
+PUT {{baseUrl}}/api/users/complete-register HTTP/1.1
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+  "name": "Pepe",
+  "lastName": "Perez",
+  "birthDate": "1932-01-29"
+}
+
+### Obtener perfil de usuario por nickname
+GET {{baseUrl}}/api/users/{{nikname}} HTTP/1.1
+Authorization: {{authToken}}
+
+
+### Actualizar datos del perfil
+PATCH {{baseUrl}}/api/users/update-profile HTTP/1.1
+Content-Type: multipart/form-data; boundary=Boundary
+Authorization: {{authToken}}
+
+--Boundary
+Content-Disposition: form-data; name="nickname"
+Content-Type: text/plain
+
+raaul_raamirezz13
+--Boundary
+Content-Disposition: form-data; name="profilePicture"; filename="profile.png"
+Content-Type: image/png
+
+< ./profile.png
+--Boundary--
+
+### Solicitar restablecimiento de contraseña
+POST {{baseUrl}}/api/auth/forgot-password HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "adarve529@gmail.com"
+}
+
+### Restablecer la contraseña
+POST {{baseUrl}}/api/auth/reset-password HTTP/1.1
+Content-Type: application/json
+
+{
+  "token": "100c0785726497b98b5f3fe55ed23969f16230c876080489f0688155c714b099",
+  "password": "nuevaPassword"
+}
+
+### Cambiar contraseña
+PUT {{baseUrl}}/api/users/change-password HTTP/1.1
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+  "currentPassword": "nuevaPassword",
+  "newPassword": "nuevaPassword123"
+}
+
+### Soft Delete
+DELETE {{baseUrl}}/api/users/67df10fb89829538ae8b3214?soft=true HTTP/1.1
+Authorization: Bearer {{authToken}}
+
+### Hard Delete 
+DELETE {{baseUrl}}/api/users/67df08edda50f3f2e4a5f480?soft=false HTTP/1.1
+Authorization: Bearer {{authToken}}
+
+### Reactivar cuenta eliminada
+POST {{baseUrl}}/api/users/reactivate/67df10fb89829538ae8b3214 HTTP/1.1
+Authorization: Bearer {{authToken}}
+
+{
+  "email": "rramirezsoft@gmail.com",
+  "password": "nuevaPassword123"
+}
+
+### Logout 
+POST {{baseUrl}}/api/auth/logout HTTP/1.1
+Authorization: {{authToken}} 
