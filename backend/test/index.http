@@ -1,7 +1,7 @@
 @baseUrl = http://localhost:3000
-@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2UyYjBlYTlmNTJkMzExNmYwMGVhMTIiLCJpYXQiOjE3NDI5MDk2NzQsImV4cCI6MTc0MjkxNjg3NH0.sgBzBYjdqydtWEbMnB06Q9fX7BNTrYCJKfmDsqRWw4Q
+@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2UxNjJiMzA0ZjZjNDg1YzYxMThjNWMiLCJpYXQiOjE3NDI5MTA1MzUsImV4cCI6MTc0MjkxNzczNX0.ZSkZtSwtUpogz8Lh7_9ZnM6n4HmE9zMtVXGFyy76At0
 
-@nikname = jose
+@nikname = pepee_12
 
 ### Registro de usuario con rol de user
 POST {{baseUrl}}/api/auth/register HTTP/1.1
@@ -52,10 +52,10 @@ Content-Type: text/plain
 
 2003-09-29
 --Boundry
-Content-Disposition: form-data; name="profilePicture"; filename="diagrama_red_proyecto.png"
-Content-Type: image/png
+Content-Disposition: form-data; name="profilePicture"; filename="hq720.jpg"
+Content-Type: image/jpg
 
-< ../diagrama_red_proyecto.png
+< ./hq720.jpg
 --Boundry--
 
 ### Completar registro de usuario sin foto de perfil
@@ -83,12 +83,12 @@ Authorization: {{accessToken}}
 Content-Disposition: form-data; name="nickname"
 Content-Type: text/plain
 
-raaul_raamirezz13
+pepee_12
 --Boundary
-Content-Disposition: form-data; name="profilePicture"; filename="profile.png"
-Content-Type: image/png
+Content-Disposition: form-data; name="profilePicture"; filename="dni.jpeg"
+Content-Type: image/jpeg
 
-< ./profile.png
+< ./dni.jpeg
 --Boundary--
 
 ### Solicitar restablecimiento de contraseña

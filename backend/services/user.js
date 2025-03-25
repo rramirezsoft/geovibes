@@ -19,7 +19,7 @@ const completeUserProfile = async (userId, profileData) => {
         if (profilePicture) {
             const pinataResponse = await uploadToPinata(profilePicture.buffer, profilePicture.originalname); 
             const ipfsFile = pinataResponse.IpfsHash;
-            ipfsLink = `${process.env.PINATA_GATEWAY_URL}/${ipfsFile}`; 
+            ipfsLink = `${process.env.PINATA_GATEWAY_URL}/${ipfsFile}`; // Generamos el enlace IPFS
         }
 
         // Actualiza el usuario con los nuevos datos
@@ -27,7 +27,7 @@ const completeUserProfile = async (userId, profileData) => {
             name,
             lastName,
             birthDate,
-            profilePicture: ipfsLink || undefined // Si no se proporciona foto, no actualizamos el campo
+            profilePicture: ipfsLink || undefined 
         }, { new: true });
 
         if (!updatedUser) {

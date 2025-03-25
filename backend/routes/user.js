@@ -7,7 +7,11 @@ const {
     deleteUserCtrl,
     reactivateUserCtrl
     } = require("../controllers/user");
-const { validatorCompleteRegistration, validatorUpdateProfile, validatorChangePassword } = require("../validators/user");
+const { 
+    validatorCompleteRegistration,
+    validatorUpdateProfile, 
+    validatorChangePassword 
+} = require("../validators/user");
 const { authMiddleware } = require("../middleware/session");
 const { uploadMiddlewareMemory } = require("../middleware/storage");
 
