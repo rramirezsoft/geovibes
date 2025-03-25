@@ -8,7 +8,7 @@ const {
     reactivateUserCtrl
     } = require("../controllers/user");
 const { validatorCompleteRegistration, validatorUpdateProfile, validatorChangePassword } = require("../validators/user");
-const authMiddleware = require("../middleware/session");
+const { authMiddleware } = require("../middleware/session");
 const { uploadMiddlewareMemory } = require("../middleware/storage");
 
 const router = express.Router();

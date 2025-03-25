@@ -26,13 +26,11 @@ const uploadToPinata = async (fileBuffer, fileName) => {
             }
         });
 
-        const responseText = await response.text();
-
         if (!response.ok) {
             throw new Error(`Error al subir el archivo: ${response.statusText}`);
         }
 
-        const responseData = JSON.parse(responseText);
+        const responseData = await response.json();
         return responseData;
     } catch (error) {
         console.error('Error al subir el archivo a Pinata:', error);

@@ -74,18 +74,12 @@ const resetPasswordCtrl = async (req, res) => {
     }
 };
 
-const refreshTokenCtrl = async (req, res) => {
+const refreshTokenCtrl = (req, res) => {
     try {
-        const { refreshToken } = req.cookies;
-        if (!refreshToken) throw { status: 403, message: "NO_REFRESH_TOKEN_PROVIDED" };
-
-        const userId = req.user?._id; 
-        if (!userId) throw { status: 403, message: "INVALID_USER" };
-
-        const { accessToken } = await refreshTokenService(userId, refreshToken);
+        const { accessToken } = refreshTokenService(req.user);
         res.status(200).json({ accessToken });
     } catch (err) {
-        handleHttpError(res, err.message, err.status || 403);
+        handleHttpError(res, err.message, err.status || 500);
     }
 };
 

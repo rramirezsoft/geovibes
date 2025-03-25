@@ -15,7 +15,7 @@ const {
     validatorForgotPassword, 
     validatorResetPassword 
 } = require("../validators/auth");
-const authMiddleware = require("../middleware/session");
+const { authMiddleware, refreshAuthMiddleware} = require("../middleware/session");
 
 const router = express.Router();
 
@@ -24,7 +24,7 @@ router.put("/validate", authMiddleware, validatorCode, verifyEmailCtrl);
 router.post("/login", validatorLogin, loginCtrl);
 router.post('/forgot-password', validatorForgotPassword, forgotPasswordCtrl);
 router.post('/reset-password', validatorResetPassword, resetPasswordCtrl);
-router.post('/refresh', authMiddleware, refreshTokenCtrl);
+router.post('/refresh', refreshAuthMiddleware, refreshTokenCtrl);
 router.post('/logout', authMiddleware, logoutCtrl);
 
 module.exports = router;

@@ -199,30 +199,13 @@ const resetPassword = async (token, password) => {
 };
 
 /**
- * Refresca el Access Token con el Refresh Token
- * @param {String} userId - ID del usuario
- * @param {String} refreshToken - Refresh Token
- * @returns - Nuevo Access Token
+ * Genera un nuevo Access Token utilizando el usuario del middleware
+ * @param {Object} user - Usuario obtenido del middleware
+ * @returns {Object} - Nuevo Access Token
  */
-const refreshTokenService = async (userId, refreshToken) => {
-    try {
-        // Verificamos el refresh token
-        const isValidToken = verifyRefreshToken(refreshToken);
-        if (!isValidToken) throw { status: 403, message: "INVALID_REFRESH_TOKEN" };
-
-        // Obtenemos el token guardado en Redis
-        const storedToken = await getRefreshToken(userId);
-        if (storedToken !== refreshToken) {
-            throw { status: 403, message: "REFRESH_TOKEN_MISMATCH" };
-        }
-
-        // Generamos nuevo Access Token
-        const newAccessToken = generateAccessToken({ _id: userId });
-        return { accessToken: newAccessToken };
-    } catch (error) {
-        console.error("❌ Error en refreshTokenService:", error);
-        throw error;
-    }
+const refreshTokenService = (user) => {
+    const newAccessToken = generateAccessToken({ _id: user._id });
+    return { accessToken: newAccessToken };
 };
 
 /**
