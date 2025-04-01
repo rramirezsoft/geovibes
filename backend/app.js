@@ -20,6 +20,9 @@ const app = express();
 connectMongoDB(); // MongoDB
 connectRedis(); // Redis
 
+// Jobs
+require('./jobs/cleanUnverifiedUsers.js'); // Limpia usuarios no verificados
+
 // Configuración de CORS
 const corsOptions = {
     origin: process.env.FRONTEND_URL || '*', // Permite que solo el frontend se comunique con el backend
@@ -45,7 +48,7 @@ app.use(cookieParser());
 
 // Rutas
 app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api/user', userRoutes);
 
 // Puerto
 const port = process.env.PORT || 3001;
@@ -59,3 +62,5 @@ app.listen(port, () => {
     })
 
 })
+
+module.exports = app;

@@ -1,6 +1,7 @@
 const express = require("express");
 const { 
-    completeRegistrationCtrl, 
+    completeRegisterCtrl, 
+    uploadProfilePictureCtrl,
     updateProfileCtrl, 
     getUserProfileCtrl, 
     changePasswordCtrl,
@@ -8,7 +9,8 @@ const {
     reactivateUserCtrl
     } = require("../controllers/user");
 const { 
-    validatorCompleteRegistration,
+    validatorCompleteRegister,
+    validatorProfilePicture,
     validatorUpdateProfile, 
     validatorChangePassword 
 } = require("../validators/user");
@@ -17,11 +19,12 @@ const { uploadMiddlewareMemory } = require("../middleware/storage");
 
 const router = express.Router();
 
-router.put("/complete-register", authMiddleware, uploadMiddlewareMemory.single("profilePicture"), validatorCompleteRegistration, completeRegistrationCtrl);
-router.patch("/update-profile", authMiddleware, uploadMiddlewareMemory.single("profilePicture"), validatorUpdateProfile, updateProfileCtrl);
-router.get("/:nickname", authMiddleware, getUserProfileCtrl);
+router.put("/complete-register", authMiddleware, validatorCompleteRegister, completeRegisterCtrl);
+router.patch('/profile-picture', authMiddleware, uploadMiddlewareMemory.single('profilePicture'), validatorProfilePicture, uploadProfilePictureCtrl);
+router.patch("/update-profile", authMiddleware, validatorUpdateProfile, updateProfileCtrl);
+router.get("/", authMiddleware, getUserProfileCtrl);
 router.put("/change-password", authMiddleware, validatorChangePassword, changePasswordCtrl);
-router.delete("/:id", authMiddleware, deleteUserCtrl);
+router.delete("/", authMiddleware, deleteUserCtrl);
 router.post('/reactivate/:id', authMiddleware, reactivateUserCtrl);
 
 module.exports = router;

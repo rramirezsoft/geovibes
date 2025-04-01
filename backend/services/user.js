@@ -1,35 +1,53 @@
 const User = require('../models/nosql/user');
-const { uploadToPinata } = require('../utils/handleUploadIPFS'); 
+const { uploadToPinata, deleteFileFromPinata } = require('../utils/handleUploadIPFS'); 
 const { compare, encrypt } = require('../utils/handlePassword');
 
-
 /**
- * Completa o actualiza el perfil del usuario.
+ * Completa el registro del usuario.
  * @param {Object} userId - ID del usuario autenticado
- * @param {Object} profileData - Datos del perfil (nombre, apellidos, fecha de nacimiento, foto de perfil)
+ * @param {Object} profileData - Datos del perfil (nombre, apellidos, fecha de nacimiento)
  * @returns {Object} - El usuario actualizado
  */
-const completeUserProfile = async (userId, profileData) => {
+const completeRegister = async (userId, profileData) => {
     try {
-        const { name, lastName, birthDate, profilePicture } = profileData;
-
-        let ipfsLink = undefined;
-        
-        // Si hay foto de perfil, sube a Pinata
-        if (profilePicture) {
-            const pinataResponse = await uploadToPinata(profilePicture.buffer, profilePicture.originalname); 
-            const ipfsFile = pinataResponse.IpfsHash;
-            ipfsLink = `${process.env.PINATA_GATEWAY_URL}/${ipfsFile}`; // Generamos el enlace IPFS
-        }
+        const { name, lastName, birthDate } = profileData;
 
         // Actualiza el usuario con los nuevos datos
         const updatedUser = await User.findByIdAndUpdate(userId, {
             name,
             lastName,
-            birthDate,
-            profilePicture: ipfsLink || undefined 
+            birthDate
         }, { new: true });
 
+        if (!updatedUser) { throw { status: 404, message: "USER_NOT_FOUND" }; }
+        return updatedUser;
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
+ * Sube un logo de usuario a Pinata (IPFS) y guarda la URL en la base de datos.
+ * @param {string} userId - ID del usuario autenticado.
+ * @param {Buffer} fileBuffer - Datos del archivo de imagen en formato buffer.
+ * @param {string} fileName - Nombre del archivo a subir.
+ * @returns {Object} - Usuario actualizado con la URL del logo.
+ */
+const uploadProfilePicture = async (userId, fileBuffer, fileName) => {
+    try {
+        const user = await User.findById(userId);
+        if (!user) throw { status: 404, message: "USER_NOT_FOUND" };
+
+        if (user.profilePicture !== null) {
+            const cid = user.profilePicture.split("/").pop();
+            await deleteFileFromPinata(cid);
+        }
+        
+        const response = await uploadToPinata(fileBuffer, fileName);
+        const imageUrl = `${process.env.PINATA_GATEWAY_URL}/${response.IpfsHash}`;
+        
+        const updatedUser = await User.findByIdAndUpdate(userId, { profilePicture: imageUrl }, { new: true });
+        
         if (!updatedUser) {
             throw { status: 404, message: "USER_NOT_FOUND" };
         }
@@ -41,14 +59,14 @@ const completeUserProfile = async (userId, profileData) => {
 };
 
 /**
- * Actualiza el perfil del usuario (nickname y/o imagen de perfil)
+ * Actualiza los campos del perfil del usuario (nickname, name, y/o lastName).
  * @param {ObjectId} userId - ID del usuario autenticado
  * @param {Object} profileData - Datos a actualizar (nickname, profilePicture)
  * @returns {Object} - El usuario actualizado
  */
 const updateUserProfile = async (userId, profileData) => {
     try {
-        const { nickname, profilePicture } = profileData;
+        const { nickname, name, lastName } = profileData;
         let updateFields = {};
 
         // Si el usuario quiere cambiar el nickname, verificamos que no esté en uso
@@ -59,13 +77,9 @@ const updateUserProfile = async (userId, profileData) => {
             }
             updateFields.nickname = nickname;
         }
-
-        // Si hay imagen de perfil, subimos a Pinata
-        if (profilePicture) {
-            const pinataResponse = await uploadToPinata(profilePicture.buffer, profilePicture.originalname);
-            const ipfsFile = pinataResponse.IpfsHash;
-            updateFields.profilePicture = `${process.env.PINATA_GATEWAY_URL}/${ipfsFile}`;
-        }
+        // Si el usuario quiere cambiar el nombre o apellidos, los actualizamos
+        if (name) { updateFields.name = name; }
+        if (lastName) { updateFields.lastName = lastName; }
 
         // Actualiza el usuario con los nuevos datos
         const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true });
@@ -73,7 +87,6 @@ const updateUserProfile = async (userId, profileData) => {
         if (!updatedUser) {
             throw { status: 404, message: "USER_NOT_FOUND" };
         }
-
         return updatedUser;
     } catch (error) {
         throw error;
@@ -81,18 +94,15 @@ const updateUserProfile = async (userId, profileData) => {
 };
 
 /**
- * Obtiene el perfil de un usuario por su nickname
- * @param {String} nickname - Nickname del usuario
- * @returns {Object} - Perfil del usuario
+ * Obtiene los datos del usuario autenticado.
+ * @param {string} userId - ID del usuario autenticado.
+ * @returns {Object} - Datos del usuario sin la contraseña.
  */
-const getUserProfile = async (nickname) => {
+const getUserProfile = async (userId) => {
     try {
-        const user = await User.findOne({ nickname }).select("-__v");
-
+        const user = await User.findById(userId).select('-password -__v'); 
         if (!user) {throw { status: 404, message: "USER_NOT_FOUND" };}
-
         return user;
-
     } catch (error) {
         throw error;
     }
@@ -135,19 +145,25 @@ const changePassword = async (userId, currentPassword, newPassword) => {
  *  Delete de un usuario
  * @param {String} userId - ID del usuario a eliminar
  * @param {Boolean} isSoft - Si es true, realiza un soft delete, sino, hard delete
- * @returns {Object} - Usuario eliminado (con soft delete, tiene el campo `deletedAt`)
+ * @returns {String} - Mensaje de éxito
  */
 const deleteUser = async (userId, isSoft = true) => {
     try {
         const user = await User.findById(userId);
-
         if (!user) { throw { status: 404, message: "USER_NOT_FOUND" }; }
 
-        if (isSoft) { await user.delete(); } 
-        
-        else { await User.deleteOne({ _id: userId }); }
-
-        return user;
+        if (isSoft) { 
+            await user.delete();
+            return "USER_SOFT_DELETED_SUCCESSFULLY";
+         } 
+        else { 
+            if (user.profilePicture !== null) {
+                const cid = user.profilePicture.split("/").pop(); 
+                await deleteFileFromPinata(cid);
+            }
+            await User.deleteOne({ _id: userId }); 
+            return "USER_HARD_DELETED_SUCCESSFULLY";
+        }
     } catch (error) {
         throw error;
     }
@@ -183,7 +199,8 @@ const reactivateUser = async (email, password) => {
     }
 };
 module.exports = { 
-    completeUserProfile, 
+    completeRegister,
+    uploadProfilePicture, 
     updateUserProfile, 
     getUserProfile, 
     changePassword, 

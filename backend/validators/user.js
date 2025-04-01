@@ -1,7 +1,9 @@
 const { body } = require('express-validator');
 const { validateResults } = require('../utils/handleValidator');
 
-const validatorCompleteRegistration = [
+const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+
+const validatorCompleteRegister = [
     body('name')
     .exists().withMessage("El nombre es obligatorio")
     .notEmpty().withMessage("El nickname no puede estar vacío")
@@ -16,17 +18,17 @@ const validatorCompleteRegistration = [
         .exists().withMessage('La fecha de nacimiento es obligatoria.')
         .notEmpty().withMessage('La fecha de nacimiento no puede estar vacía.')
         .isDate().withMessage('La fecha de nacimiento debe estar en formato YYYY-MM-DD.'),
-    
-    // Si el archivo existe, aseguramos que es una imagen válida
-    body('profilePicture')
-        .optional() 
+    (req, res, next) => validateResults(req, res, next)
+];
+
+const validatorProfilePicture = [
+    body('logo')
         .custom((value, { req }) => {
-            if (req.file) {
-                const file = req.file;
-                const validMimeTypes = ['image/jpeg', 'image/png', 'image/jpg']; // Los tipos de archivo que permitimos
-                if (!validMimeTypes.includes(file.mimetype)) {
-                    throw new Error('El formato de la imagen debe ser JPEG, JPG o PNG.');
-                }
+            if (!req.file) {
+                throw new Error("No hay archivo subido");
+            }
+            if (!allowedImageTypes.includes(req.file.mimetype)) {
+                throw new Error("El archivo debe ser una imagen (JPEG, JPG, PNG)");
             }
             return true;
         }),
@@ -39,19 +41,15 @@ const validatorUpdateProfile = [
         .isLength({ min: 3, max: 20 }).withMessage('El nickname debe tener entre 3 y 20 caracteres.')
         .matches(/^[a-zA-Z0-9_]+$/)
         .withMessage("Solo se permiten letras, números y guiones bajos"),
-    
-    body('profilePicture')
+
+    body('name')
         .optional()
-        .custom((value, { req }) => {
-            if (req.file) {
-                const file = req.file;
-                const validMimeTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-                if (!validMimeTypes.includes(file.mimetype)) {
-                    throw new Error('El formato de la imagen debe ser JPEG, JPG o PNG.');
-                }
-            }
-            return true;
-        }),
+        .isLength({ min: 3, max: 15 }).withMessage("El nombre debe tener entre 3 y 15 caracteres"),
+        
+    body('lastName')
+        .optional()
+        .isLength({ min: 3, max: 20 }).withMessage("Los apellidos deben tener entre 3 y 20 caracteres"),
+    
     (req, res, next) => validateResults(req, res, next)
 ];
 
@@ -69,4 +67,8 @@ const validatorChangePassword = [
         (req, res, next) => validateResults(req, res, next)
 ]
 
-module.exports = { validatorCompleteRegistration, validatorUpdateProfile, validatorChangePassword };
+module.exports = { 
+    validatorCompleteRegister,
+    validatorProfilePicture, 
+    validatorUpdateProfile, 
+    validatorChangePassword };

@@ -1,6 +1,7 @@
 const { matchedData } = require("express-validator");
 const { 
-    completeUserProfile,
+    completeRegister,
+    uploadProfilePicture,
     updateUserProfile,
     getUserProfile,
     changePassword,
@@ -9,18 +10,12 @@ const {
     } = require("../services/user");
 const { handleHttpError } = require("../utils/handleError");
 
-const completeRegistrationCtrl = async (req, res) => {
+const completeRegisterCtrl = async (req, res) => {
     try {
         const cleanData = matchedData(req); 
-        const userId = req.user._id; // Usamos el ID del usuario autenticado desde el middleware
+        const userId = req.user._id; 
 
-        // Si se ha subido una imagen, la añadimos a cleanData
-        if (req.file) {
-            cleanData.profilePicture = req.file;
-        }
-
-        // Llamamos al servicio para completar el perfil
-        const updatedUser = await completeUserProfile(userId, cleanData);
+        const updatedUser = await completeRegister(userId, cleanData);
 
         updatedUser.set("password", undefined, { strict: false });
 
@@ -33,21 +28,38 @@ const completeRegistrationCtrl = async (req, res) => {
     }
 };
 
+const uploadProfilePictureCtrl = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: "NO_FILE_UPLOATED" });
+        }
+        
+        const userId = req.user._id;
+        const fileBuffer = req.file.buffer;
+        const fileName = `${userId}_profilePicture.${req.file.mimetype.split('/')[1]}`;
+        
+        const updatedUser = await uploadProfilePicture(userId, fileBuffer, fileName);
+        updatedUser.set("password", undefined, { strict: false });
+        
+        res.status(200).json({
+            message: "PROFILE_PICTURE_UPLOADED_SUCCESSFULLY",
+            user: updatedUser
+        });
+    } catch (err) {
+        handleHttpError(res, err.message, err.status || 500);
+    }
+};
+
 const updateProfileCtrl = async (req, res) => {
     try {
         const cleanData = matchedData(req);
         const userId = req.user._id; // ID del usuario autenticado
 
-        // Si se sube una imagen, la añadimos a cleanData
-        if (req.file) {
-            cleanData.profilePicture = req.file;
-        }
-
         const updatedUser = await updateUserProfile(userId, cleanData);
         updatedUser.set("password", undefined, { strict: false });
 
         res.status(200).json({
-            message: "PROFILE_UPDATED_SUCCESSFULLY",
+            message: "PROFILE_FIEDLS_UPDATED_SUCCESSFULLY",
             user: updatedUser,
         });
     } catch (err) {
@@ -57,12 +69,10 @@ const updateProfileCtrl = async (req, res) => {
 
 const getUserProfileCtrl = async (req, res) => {
     try {
-        const { nickname } = req.params;
-        const userProfile = await getUserProfile(nickname);
+        const userId = req.user._id;
+        const user = await getUserProfile(userId);
 
-        res.status(200).json({
-            user: userProfile
-        });
+        res.status(200).json({ user });
     } catch (err) {
         handleHttpError(res, err.message, err.status || 500);
     }
@@ -83,20 +93,12 @@ const changePasswordCtrl = async (req, res) => {
 
 const deleteUserCtrl = async (req, res) => {
     try {
-        const { id } = req.params; 
-        const isSoft = req.query.soft === 'false' ? false : true;  // Si soft=false, hacer hard delete
+        const userId = req.user._id;
+        const softDelete = req.query.soft !== "false"; // Soft delete por defecto
 
-        const deletedUser = await deleteUser(id, isSoft);
+        const message = await deleteUser(userId, softDelete);
 
-        if (req.query.soft === 'false') {
-            return res.status(200).json({message: "USER_HARD_DELETED_SUCCESSFULLY"});
-        }
-        else if(req.query.soft === 'true') {
-            return res.status(200).json({
-                message: "USER_SOFT_DELETED_SUCCESSFULLY",
-                user: deletedUser
-            });
-        }
+        res.status(200).json({ message });
     } catch (err) {
         handleHttpError(res, err.message, err.status || 500);
     }
@@ -117,7 +119,8 @@ const reactivateUserCtrl = async (req, res) => {
 };
 
 module.exports = { 
-    completeRegistrationCtrl, 
+    completeRegisterCtrl,
+    uploadProfilePictureCtrl, 
     updateProfileCtrl, 
     getUserProfileCtrl, 
     changePasswordCtrl, 

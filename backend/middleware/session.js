@@ -11,17 +11,11 @@ const authMiddleware = async (req, res, next) => {
         const authHeader = req.headers.authorization;
 
         // Verificar si hay token en la cabecera
-        if (!authHeader) {
-            handleHttpError(res, "NOT_TOKEN", 401);
-            return;
-        }
+        if (!authHeader) {handleHttpError(res, "NOT_TOKEN", 401); return; }
 
         // Extraer el token de la cabecera
         const token = authHeader.split(' ').pop();
-        if (!token) {
-            handleHttpError(res, "NOT_TOKEN", 401);
-            return;
-        }
+        if (!token) { handleHttpError(res, "NOT_TOKEN", 401); return;}
 
         // Verificar el Access Token
         const dataToken = verifyAccessToken(token);
@@ -29,11 +23,10 @@ const authMiddleware = async (req, res, next) => {
             const user = await User.findById(dataToken._id);
             if (user) {
                 if (!user.emailVerified) {
-                    if (req.url.includes('/validate')) {
+                    if (req.url.includes('/validate') || req.url.includes('/resend-code')) {
                         req.user = user;
                         return next();  // Permite continuar al endpoint de verificación de correo
                     }
-
                     return handleHttpError(res, "EMAIL_NOT_VERIFIED", 403);
                 }
                 req.user = user;

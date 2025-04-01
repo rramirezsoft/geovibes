@@ -17,11 +17,6 @@ const generateRefreshToken = (user) => {
     return jwt.sign({ _id: user._id }, JWT_REFRESH_SECRET, { expiresIn: "7d" });
 };
 
-// Token de verificación de email (1h)
-const generateEmailVerificationToken = (user) => {
-    return jwt.sign({ _id: user._id }, JWT_VERIFICATION_SECRET, { expiresIn: '1h' });
-};
-
 // Verificar Access Token
 const verifyAccessToken = (token) => {
     try {
@@ -85,6 +80,5 @@ module.exports = {
     verifyRefreshToken,
     getRefreshToken,
     saveRefreshToken,
-    deleteRefreshToken,
-    generateEmailVerificationToken
+    deleteRefreshToken
 };

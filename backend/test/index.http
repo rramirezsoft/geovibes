@@ -1,16 +1,26 @@
 @baseUrl = http://localhost:3000
-@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2UxNjJiMzA0ZjZjNDg1YzYxMThjNWMiLCJpYXQiOjE3NDI5MTA1MzUsImV4cCI6MTc0MjkxNzczNX0.ZSkZtSwtUpogz8Lh7_9ZnM6n4HmE9zMtVXGFyy76At0
-
-@nikname = pepee_12
+@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2ViYjk4OTE3YTMyNjdiYzQ0M2FiNDUiLCJpYXQiOjE3NDM1MjE3NDQsImV4cCI6MTc0MzUyODk0NH0.JgGX69nr0fz-gt5BegSfp0cQiXUGkIHpfpyP8dlt-yc
+@nickname = raul123
 
 ### Registro de usuario con rol de user
 POST {{baseUrl}}/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "nickname": "jose",
-  "email": "jose@gmail.com",
+  "nickname": "rulas",
+  "email": "adarve529@gmail.com",
   "password": "1234567890"
+}
+
+### Registro de usuario con rol de admin
+POST {{baseUrl}}/api/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "nickname": "admin123",
+  "email": "admin@gmail.com",
+  "password": "adminPassword",
+  "role": "admin"
 }
 
 ### Validacion del email
@@ -19,77 +29,60 @@ Content-Type: application/json
 Authorization: {{accessToken}}
 
 {
-  "verificationCode": "591144"
+  "verificationCode": "944231"
 }
+
+### Reenviar código de verificación
+POST {{baseUrl}}/api/auth/resend-code HTTP/1.1
+Authorization: {{accessToken}}
+
 
 ### Login
 POST {{baseUrl}}/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "panzerpro25@gmail.com",
+  "email": "adarve529@gmail.com",
   "password": "1234567890"
 }
 
-### Completar registro de usuario con foto de perfil
-PUT {{baseUrl}}/api/users/complete-register HTTP/1.1
-Content-Type: multipart/form-data; boundary=Boundry
-Authorization: {{accessToken}}
-
---Boundry
-Content-Disposition: form-data; name="name"
-Content-Type: text/plain
-
-Raúl
---Boundry
-Content-Disposition: form-data; name="lastName"
-Content-Type: text/plain
-
-Ramírez Adarve
---Boundry
-Content-Disposition: form-data; name="birthDate"
-Content-Type: text/plain
-
-2003-09-29
---Boundry
-Content-Disposition: form-data; name="profilePicture"; filename="hq720.jpg"
-Content-Type: image/jpg
-
-< ./hq720.jpg
---Boundry--
-
-### Completar registro de usuario sin foto de perfil
-PUT {{baseUrl}}/api/users/complete-register HTTP/1.1
+### Completar registro de usuario
+PUT {{baseUrl}}/api/user/complete-register HTTP/1.1
 Content-Type: application/json
 Authorization: {{accessToken}}
 
 {
-  "name": "Javi",
-  "lastName": "Lopez",
-  "birthDate": "1922-01-29"
+  "name": "Raúl",
+  "lastName": "Ramírez Adarve",
+  "birthDate": "2003-09-29"
 }
 
-### Obtener perfil de usuario por nickname
-GET {{baseUrl}}/api/users/{{nikname}} HTTP/1.1
+### Obtener perfil de usuario
+GET {{baseUrl}}/api/user HTTP/1.1
 Authorization: {{accessToken}}
 
+### Subir/actualizar foto de perfil
+PATCH {{baseUrl}}/api/user/profile-picture HTTP/1.1
+Content-Type: multipart/form-data; boundary=Boundry
+Authorization: {{accessToken}}
+
+--Boundry
+Content-Disposition: form-data; name="profilePicture"; filename="img.png"
+Content-Type: image/png
+
+< ./img.png
+--Boundry--
 
 ### Actualizar datos del perfil
-PATCH {{baseUrl}}/api/users/update-profile HTTP/1.1
-Content-Type: multipart/form-data; boundary=Boundary
+PATCH {{baseUrl}}/api/user/update-profile HTTP/1.1
+Content-Type: application/json
 Authorization: {{accessToken}}
-
---Boundary
-Content-Disposition: form-data; name="nickname"
-Content-Type: text/plain
-
-pepee_12
---Boundary
-Content-Disposition: form-data; name="profilePicture"; filename="dni.jpeg"
-Content-Type: image/jpeg
-
-< ./dni.jpeg
---Boundary--
+  
+{
+  "nickname": "adarve_529",
+  "name": "Raúl",
+  "lastName": "Ramírez Adarve"
+}
 
 ### Solicitar restablecimiento de contraseña
 POST {{baseUrl}}/api/auth/forgot-password HTTP/1.1
@@ -109,25 +102,25 @@ Content-Type: application/json
 }
 
 ### Cambiar contraseña
-PUT {{baseUrl}}/api/users/change-password HTTP/1.1
+PUT {{baseUrl}}/api/user/change-password HTTP/1.1
 Content-Type: application/json
 Authorization: {{accessToken}}
 
 {
-  "currentPassword": "nuevaPassword",
+  "currentPassword": "1234567890",
   "newPassword": "nuevaPassword123"
 }
 
 ### Soft Delete
-DELETE {{baseUrl}}/api/users/67df10fb89829538ae8b3214?soft=true HTTP/1.1
+DELETE {{baseUrl}}/api/user HTTP/1.1
 Authorization: Bearer {{accessToken}}
 
 ### Hard Delete 
-DELETE {{baseUrl}}/api/users/67e14f08c0df3a316587b0c2?soft=false HTTP/1.1
+DELETE {{baseUrl}}/api/user?soft=false HTTP/1.1
 Authorization: Bearer {{accessToken}}
 
 ### Reactivar cuenta eliminada
-POST {{baseUrl}}/api/users/reactivate/67df10fb89829538ae8b3214 HTTP/1.1
+POST {{baseUrl}}/api/user/reactivate/67df10fb89829538ae8b3214 HTTP/1.1
 Authorization: Bearer {{accessToken}}
 
 {

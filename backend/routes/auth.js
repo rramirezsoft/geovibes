@@ -2,6 +2,7 @@ const express = require("express");
 const { 
     registerCtrl, 
     verifyEmailCtrl, 
+    resendVerificationCodeCtrl,
     loginCtrl, 
     forgotPasswordCtrl, 
     resetPasswordCtrl,
@@ -21,6 +22,7 @@ const router = express.Router();
 
 router.post("/register", validatorRegister, registerCtrl);
 router.put("/validate", authMiddleware, validatorCode, verifyEmailCtrl);
+router.post("/resend-code", authMiddleware, resendVerificationCodeCtrl);
 router.post("/login", validatorLogin, loginCtrl);
 router.post('/forgot-password', validatorForgotPassword, forgotPasswordCtrl);
 router.post('/reset-password', validatorResetPassword, resetPasswordCtrl);

@@ -3,6 +3,7 @@ const { handleHttpError } = require("../utils/handleError");
 const { 
     registerUser, 
     verifyUserCode, 
+    resendVerificationCode,
     loginUser, 
     forgotPassword, 
     resetPassword,
@@ -29,6 +30,16 @@ const verifyEmailCtrl = async (req, res) => {
         const user = req.user;
 
         const result = await verifyUserCode(user, verificationCode);
+        res.status(200).send(result);
+    } catch (err) {
+        handleHttpError(res, err.message, err.status || 400);
+    }
+};
+
+const resendVerificationCodeCtrl = async (req, res) => {
+    try {
+        const user = req.user;
+        const result = await resendVerificationCode(user);
         res.status(200).send(result);
     } catch (err) {
         handleHttpError(res, err.message, err.status || 400);
@@ -104,4 +115,12 @@ const logoutCtrl = async (req, res) => {
     }
 };
 
-module.exports = { registerCtrl, verifyEmailCtrl, loginCtrl, forgotPasswordCtrl, resetPasswordCtrl, refreshTokenCtrl, logoutCtrl };
+module.exports = { 
+    registerCtrl, 
+    verifyEmailCtrl, 
+    resendVerificationCodeCtrl,
+    loginCtrl, 
+    forgotPasswordCtrl, 
+    resetPasswordCtrl, 
+    refreshTokenCtrl, 
+    logoutCtrl };

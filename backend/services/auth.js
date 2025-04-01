@@ -10,6 +10,7 @@ const {
     } = require('../utils/handleJwt');
 const { sendEmail } = require('../utils/handleEmail');
 const crypto = require('crypto');
+const { generateVerificationCode } = require('../utils/generateCode');
 
 /**
  * Registra un usuario en la base de datos
@@ -44,7 +45,6 @@ const registerUser = async (userData) => {
         // Devuelve el usuario y el token
         return { user: newUser, accessToken };
     } catch (error) {
-        console.error("Error al crear usuario:", error);
         // Si el email o nikname ya existe, devuelve un error 409
         if (error.code === 11000) {
             if (error.keyValue.nickname) {
@@ -71,7 +71,7 @@ const verifyUserCode = async (user, code) => {
         }
 
         if (user.verificationCode !== code) {
-            user.verificationAttemps -= 1;
+            user.verificationAttempts -= 1;
             await user.save();
 
             if (user.verificationAttemps <= 0) {
@@ -88,6 +88,34 @@ const verifyUserCode = async (user, code) => {
         return { message: "EMAIL_VERIFIED_SUCCESSFULLY" };
     } catch (error) {
         throw error; // Le mandamos el error al controlador
+    }
+};
+
+/**
+ * Reenvía un nuevo código de verificación al usuario
+ * @param {Object} user - Usuario autenticado (req.user desde el middleware)
+ * @returns {Object} - Mensaje de éxito
+ * @throws {Object} - Error con código de estado y mensaje
+ */
+const resendVerificationCode = async (user) => {
+    try {
+        if (user.emailVerified) { throw { status: 400, message: "EMAIL_ALREADY_VERIFIED" }; }
+
+        // Generar un nuevo código y actualizar en BD
+        user.verificationCode = generateVerificationCode();
+        await user.save();
+
+        // Envia email de verificación
+        sendEmail({
+            subject: "Bienvenido a la API",
+            text: user.verificationCode,
+            from: process.env.EMAIL,
+            to: user.email
+        })
+
+        return { message: "VERIFICATION_CODE_SENT_SUCCESSFULLY" };
+    } catch (error) {
+        throw error;
     }
 };
 
@@ -130,6 +158,8 @@ const loginUser = async (email, password) => {
 /**
  * Solicita el restablecimiento de contraseña y envía un token por correo.
  * @param {String} email - Correo del usuario.
+ * @returns {Object} - Mensaje de éxito.
+ * @throws {Object} - Error con código de estado y mensaje.
  */
 const forgotPassword = async (email) => {
     try {
@@ -223,4 +253,12 @@ const logoutUser = async (userId) => {
     }
 };
 
-module.exports = { registerUser, verifyUserCode, loginUser, forgotPassword, resetPassword, refreshTokenService, logoutUser };
+module.exports = { 
+    registerUser, 
+    verifyUserCode, 
+    resendVerificationCode,
+    loginUser, 
+    forgotPassword, 
+    resetPassword, 
+    refreshTokenService, 
+    logoutUser };
