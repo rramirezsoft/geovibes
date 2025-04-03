@@ -1,6 +1,6 @@
 const request = require('supertest');
-const app = require('../app');
-const User = require('../models/nosql/user');
+const app = require('../../app');
+const User = require('../../models/nosql/user');
 
 describe('Auth - Onboarding endpoints', () => {
 

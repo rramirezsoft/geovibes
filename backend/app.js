@@ -1,17 +1,29 @@
 require('dotenv').config();
 
-// Imports
+// -- IMPORTS -- 
+// Core Modules
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const { connectMongoDB } = require('./config/mongo.js')
-const { connectRedis } = require('./config/redis.js')
-const authRoutes = require('./routes/auth.js')
-const userRoutes = require('./routes/user.js')
+
+// Configurations 
+const { connectMongoDB } = require('./config/mongo.js');
+const { connectRedis } = require('./config/redis.js');
+
+// Logging & Monitoring
 const morganBody = require('morgan-body');
-const loggerStream = require('./utils/handleLogger.js')
+const loggerStream = require('./utils/handleLogger.js');
+
+// Documentation
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('./docs/swagger.js');
+
+// Routes
+const authRoutes = require('./routes/auth.js');
+const userRoutes = require('./routes/user.js');
+const placeRoutes = require('./routes/place.js');
+const userPlaceRoutes = require('./routes/userPlace.js');
+
 
 // Inicialización de la app
 const app = express();
@@ -49,6 +61,8 @@ app.use(cookieParser());
 // Rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/place', placeRoutes);
+app.use('/api/userPlace', userPlaceRoutes);
 
 // Puerto
 const port = process.env.PORT || 3001;

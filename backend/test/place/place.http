@@ -1,0 +1,19 @@
+@baseUrl = http://localhost:3000
+@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2ViYjk4OTE3YTMyNjdiYzQ0M2FiNDUiLCJpYXQiOjE3NDM1NTAyOTEsImV4cCI6MTc0MzU1NzQ5MX0.weupkvsaP5GaTNDSmQU2HiAT7xydUMqcYwph8qiCBVo
+
+### Registrar un lugar
+POST {{baseUrl}}/api/place/find-or-create HTTP/1.1
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+  "placeName": "equinoccio majadahonda"
+}
+
+### Obtener lugares
+GET {{baseUrl}}/api/place
+Authorization: {{accessToken}}
+
+### Obtener un lugar por ID
+GET {{baseUrl}}/api/place/67ec808ebda63b9475c082c6
+Authorization: {{accessToken}}
