@@ -14,7 +14,9 @@ const registerCtrl = async (req, res) => {
     try {
         const cleanData = matchedData(req);
         const data = await registerUser(cleanData);
-        res.status(201).send(data);
+        res.status(201)
+            .header("Authorization", `Bearer ${data.accessToken}`)
+            .json({ message: data.message, user: data.user });
     } catch (err) {
         if (err.status === 409) {
             handleHttpError(res, err.message, 409);
@@ -59,7 +61,9 @@ const loginCtrl = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000 
         });
 
-        res.status(200).json({ user, accessToken });
+        res.status(200)
+            .header("Authorization", `Bearer ${accessToken}`)
+            .json({ user });
     } catch (err) {
         handleHttpError(res, err.message, err.status || 400);
     }
@@ -85,12 +89,15 @@ const resetPasswordCtrl = async (req, res) => {
     }
 };
 
-const refreshTokenCtrl = (req, res) => {
+const refreshTokenCtrl = async (req, res) => {
     try {
-        const { accessToken } = refreshTokenService(req.user);
+        const { user, refreshToken } = req; 
+        const { accessToken } = await refreshTokenService(user, refreshToken);
         res.status(200).json({ accessToken });
-    } catch (err) {
-        handleHttpError(res, err.message, err.status || 500);
+        
+    } catch (error) {
+        console.error("❌ Error en refreshTokenCtrl:", error.message);
+        handleHttpError(res, error.message, error.status || 500);
     }
 };
 
@@ -123,4 +130,5 @@ module.exports = {
     forgotPasswordCtrl, 
     resetPasswordCtrl, 
     refreshTokenCtrl, 
-    logoutCtrl };
+    logoutCtrl 
+};

@@ -28,7 +28,7 @@ describe('Auth - Onboarding endpoints', () => {
         expect(response.body.user.email).toEqual('user123@test.com');
         expect(response.body.user.role).toEqual('user');
 
-        accessToken = response.body.accessToken;
+        accessToken = response.headers['authorization'];
         id = response.body.user._id;
         verificationCode = response.body.user.verificationCode;
     });
@@ -144,7 +144,7 @@ describe('Auth - Onboarding endpoints', () => {
 
     // ENDPOINT: /api/auth/validate
 
-    // ✅ Caso 1: Validación exitosa de email del usuario (pruebas)
+    // ✅ Caso 1: Validación exitosa de email del usuario
     it('✔️ Should validate email successfully', async () => {
         console.log("Token before validation:", accessToken);
         const response = await request(app)

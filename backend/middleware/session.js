@@ -45,21 +45,22 @@ const authMiddleware = async (req, res, next) => {
 
 const refreshAuthMiddleware = async (req, res, next) => {
     try {
+        console.log('Cookies:', req.cookies);
         const { refreshToken } = req.cookies;
         if (!refreshToken) {
-            return handleHttpError(res, "NO_REFRESH_TOKEN_PROVIDED", 403);
+            return handleHttpError(res, "NO_REFRESH_TOKEN_PROVIDED", 401);
         }
 
         // Verificar el Refresh Token
         const dataRefreshToken = verifyRefreshToken(refreshToken);
         if (!dataRefreshToken || !dataRefreshToken._id) {
-            return handleHttpError(res, "INVALID_REFRESH_TOKEN", 403);
+            return handleHttpError(res, "INVALID_REFRESH_TOKEN", 401);
         }
 
         // Validar que el Refresh Token sea válido en Redis
         const storedToken = await getRefreshToken(dataRefreshToken._id);
         if (storedToken !== refreshToken) {
-            return handleHttpError(res, "REFRESH_TOKEN_MISMATCH", 403);
+            return handleHttpError(res, "REFRESH_TOKEN_MISMATCH", 401);
         }
 
         // Obtener el usuario
@@ -73,7 +74,7 @@ const refreshAuthMiddleware = async (req, res, next) => {
         
     } catch (err) {
         console.error("❌ Error en refreshAuthMiddleware:", err.message);
-        handleHttpError(res, "NOT_SESSION", 401);
+        handleHttpError(res, "NOT_SESSION", 500);
     }
 };
 

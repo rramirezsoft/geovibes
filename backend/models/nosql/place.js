@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 const PLACE_CATEGORIES = require('../../constants/placeCategories');
 
-const PLaceSchema = new mongoose.Schema({
+const PlaceSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -45,5 +45,5 @@ const PLaceSchema = new mongoose.Schema({
     timestamps: true
 });
 
-PLaceSchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
-module.exports = mongoose.model('Place', PLaceSchema);
+PlaceSchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
+module.exports = mongoose.model('Place', PlaceSchema);

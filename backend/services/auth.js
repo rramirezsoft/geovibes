@@ -3,10 +3,8 @@ const { encrypt, compare } = require('../utils/handlePassword');
 const { 
     generateAccessToken,
     generateRefreshToken, 
-    saveRefreshToken, 
-    getRefreshToken, 
-    deleteRefreshToken,
-    verifyRefreshToken
+    saveRefreshToken,  
+    deleteRefreshToken
     } = require('../utils/handleJwt');
 const { sendEmail } = require('../utils/handleEmail');
 const crypto = require('crypto');
@@ -43,7 +41,7 @@ const registerUser = async (userData) => {
         })
         
         // Devuelve el usuario y el token
-        return { user: newUser, accessToken };
+        return { user: newUser, accessToken, message: "USER_CREATED"};
     } catch (error) {
         // Si el email o nikname ya existe, devuelve un error 409
         if (error.code === 11000) {
@@ -123,7 +121,7 @@ const resendVerificationCode = async (user) => {
  * Inicia sesión con email y password
  * @param {string} email - Email del usuario
  * @param {string} password - Contraseña del usuario
- * @returns {Object} - Usuario y token JWT
+ * @returns {Object} - Usuario y tokens JWT (access y refresh)
  */
 const loginUser = async (email, password) => {
     try {
@@ -234,8 +232,12 @@ const resetPassword = async (token, password) => {
  * @returns {Object} - Nuevo Access Token
  */
 const refreshTokenService = (user) => {
-    const newAccessToken = generateAccessToken({ _id: user._id });
-    return { accessToken: newAccessToken };
+    try {
+        const newAccessToken = generateAccessToken({ _id: user._id });
+        return { accessToken: newAccessToken };
+    } catch (error) {
+        throw error;
+    }
 };
 
 /**
