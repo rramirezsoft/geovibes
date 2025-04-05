@@ -1,5 +1,6 @@
 const UserPlace = require("../models/nosql/userPlace");
 const Place = require("../models/nosql/place");
+const { applyUserPlaceFilters } = require("../utils/handleUserPlaceFilters");
 
 /**
  * Registra un lugar para un usuario con un estado específico.
@@ -78,21 +79,17 @@ const updateUserPlace = async (userId, placeId, status, visitedAt = null) => {
 };
 
 /**
- * Obtiene los lugares registrados de un usuario, filtrando por categoría si se proporciona.
+ * Obtiene los lugares registrados de un usuario, con filtros de categoria y/o estado.
  * @param {String} userId - ID del usuario
  * @param {String} category - Categoría del lugar (opcional)
+ * @param {String} status - Estado del lugar (opcional)
  * @returns {Array} - Lista de lugares del usuario
  */
-const getUserPlaces = async (userId, category = null) => {
+const getUserPlaces = async (userId, category = null, status = null) => {
     try {
         let query = { user: userId };
 
-        // Si se pasa una categoría, filtramos los lugares que pertenecen a esa categoría
-        if (category) {
-            const places = await Place.find({ category }).select("_id");
-            const placeIds = places.map(place => place._id);
-            query.place = { $in: placeIds };
-        }
+        query = await applyUserPlaceFilters(query, category, status); // Aplicamos los filtros de categoría y estado
 
         const userPlaces = await UserPlace.find(query)
         .populate("place", "name location address country city category");
@@ -104,5 +101,52 @@ const getUserPlaces = async (userId, category = null) => {
     }
 };
 
+/**
+ * Elimina un UserPlace (soft delete o hard delete).
+ * @param {ObjectId} userId - ID del usuario.
+ * @param {ObjectId} userPlaceId - ID del UserPlace.
+ * @param {boolean} soft - Indica si es un soft delete.
+ * @returns {Object} - Mensaje de éxito.
+ */
+const deleteUserPlace = async (userId, userPlaceId, soft = true) => {
+    try {
+        const userPlace = await UserPlace.findOne({ _id: userPlaceId, user: userId });
+        if (!userPlace) throw { status: 404, message: "USER_PLACE_NOT_FOUND" };
 
-module.exports = { createUserPlace, updateUserPlace, getUserPlaces };
+        if (soft) {
+            await userPlace.delete(); 
+            return { message: "USER_PLACE_SOFT_DELETED" };
+        } else {
+            await UserPlace.deleteOne({ _id: userPlaceId });
+            return { message: "USER_PLACE_HARD_DELETED" };
+        }
+    } catch (error) {
+        console.error("❌ Error en deleteUserPlace:", error);
+        throw error;
+    }
+};
+
+/**
+ * Cuenta el número de lugares registrados de un usuario, filtrando por categoría y/o estado.
+ * @param {String} userId - ID del usuario.
+ * @param {String} category - Categoría del lugar (opcional).
+ * @param {String} status - Estado del lugar (opcional).
+ * @returns {Object} - Número de lugares registrados del usuario con los filtros aplicados.
+ */
+const countUserPlaces = async (userId, category = null, status = null) => {
+    try {
+        let query = { user: userId };
+
+        // Aplicamos los filtros de categoría y estado
+        query = await applyUserPlaceFilters(query, category, status);
+
+        const count = await UserPlace.countDocuments(query);
+
+        return { message: "USER_PLACES_COUNT", count };
+    } catch (error) {
+        console.error("❌ Error en countUserPlaces:", error);
+        throw error;
+    }
+};
+
+module.exports = { createUserPlace, updateUserPlace, getUserPlaces, deleteUserPlace, countUserPlaces };

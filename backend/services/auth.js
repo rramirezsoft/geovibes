@@ -130,8 +130,6 @@ const loginUser = async (email, password) => {
 
         if (!user) { throw { status: 404, message: "USER_NOT_FOUND" }; }
 
-        if (!user.emailVerified) { throw { status: 403, message: "EMAIL_NOT_VERIFIED" }; }
-
         // Compara la contraseña introducida con la almacenada
         const isPasswordValid = await compare(password, user.password);
         

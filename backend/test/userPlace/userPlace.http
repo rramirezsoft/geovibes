@@ -40,3 +40,23 @@ Authorization: {{accessToken}}
 ### Obtener UserPlaces filtrados por categoría
 GET {{baseUrl}}/api/userPlace?category=residential
 Authorization: {{accessToken}}
+
+### Obtener UserPlaces filtrados por estado
+GET {{baseUrl}}/api/userPlace?status=favorite
+Authorization: {{accessToken}}
+
+### Obtener UserPlaces filtrados por categoría y estado
+GET {{baseUrl}}/api/userPlace?category=station&status=visited
+Authorization: {{accessToken}}
+
+### Eliminar UserPlace (soft delete)
+DELETE {{baseUrl}}/api/userPlace/67ed0ca5390bdb1b126f1464 HTTP/1.1
+Authorization: {{accessToken}}
+
+### Eliminar UserPlace (hard delete)
+DELETE {{baseUrl}}/api/userPlace/67ed0ca5390bdb1b126f1464?soft=false HTTP/1.1
+Authorization: {{accessToken}}
+
+### Contamos los userPlaces del usuario (puede aplicarse un filtro por categoría o estado)
+GET {{baseUrl}}/api/userPlace/count
+Authorization: {{accessToken}}

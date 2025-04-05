@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2ViYjk4OTE3YTMyNjdiYzQ0M2FiNDUiLCJpYXQiOjE3NDM2OTQ2MjQsImV4cCI6MTc0MzcwMTgyNH0.bxbwl8m0tCq7Bc2u1YzTgxCCvX0xrSTiVcXH1W3_zA4
+@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2ViYjk4OTE3YTMyNjdiYzQ0M2FiNDUiLCJpYXQiOjE3NDM4NTA1NTgsImV4cCI6MTc0Mzg1Nzc1OH0.CWTlPcKIbrBwfNEZos_Y_yqf9LFpMspAXYvHnvfocv0
 ### Registro de usuario
 POST {{baseUrl}}/api/auth/register HTTP/1.1
 Content-Type: application/json
@@ -16,7 +16,7 @@ Content-Type: application/json
 Authorization: {{accessToken}}
 
 {
-  "verificationCode": "944231"
+  
 }
 
 ### Login
@@ -75,9 +75,9 @@ Content-Type: application/json
 Authorization: {{accessToken}}
 
 {
-  "placeId": "67ed0c6a390bdb1b126f145f",
+  "placeId": "67ec3a54609d5fface020c51",
   "status": "visited",
-  "visitedAt": "2003-12-01"
+  "visitedAt": "2005-03-21"
 }
 
 ### Actualizar UserPlace (con una fecha específica)
@@ -95,7 +95,7 @@ GET {{baseUrl}}/api/userPlace
 Authorization: {{accessToken}}
 
 ### Obtener UserPlaces filtrados por categoría
-GET {{baseUrl}}/api/userPlace?category=residential
+GET {{baseUrl}}/api/userPlace?category=station
 Authorization: {{accessToken}}
 
 ### Refrescar token

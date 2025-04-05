@@ -1,5 +1,8 @@
 const { check } = require('express-validator');
 const { validateResults } = require('../utils/handleValidator');
+const UserPlace = require('../models/nosql/userPlace');
+
+const validStatuses = UserPlace.schema.path('status').enumValues.map(status => status.toString());
 
 const validatorCreateUserPlace = [
     check('placeId')
@@ -10,7 +13,7 @@ const validatorCreateUserPlace = [
     check('status')
         .exists()
         .notEmpty()
-        .isIn(['visited', 'favorite', 'pending'])
+        .isIn(validStatuses)
         .withMessage('El estado es obligatorio y debe ser uno de los siguientes: visited, favorite, pending'),
     check('visitedAt')
         .optional()
@@ -19,4 +22,9 @@ const validatorCreateUserPlace = [
     (req, res, next) => validateResults(req, res, next)
 ]
 
-module.exports = { validatorCreateUserPlace };
+const validatorUserPlaceFilters = [
+    check("category").optional().isString().withMessage("La categoría debe ser una cadena"),
+    check("status").optional().isString().isIn(validStatuses).withMessage("El estado debe ser uno de los siguientes: visited, favorite, pending"),
+]
+
+module.exports = { validatorCreateUserPlace, validatorUserPlaceFilters};

@@ -1,0 +1,53 @@
+'use server';
+
+import { apiResponse } from "@/utils/apiResponse";
+
+const API_BASE_URL = process.env.BACKEND_URL;
+
+// ENDPOINT: /api/auth/register
+export async function registerUser(formData) {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            nickname: formData.get("nickname"),
+            email: formData.get("email"),
+            password: formData.get("password"),
+        })
+    });
+    const data = await apiResponse(response, "Error al registrar usuario");
+    const accessToken = response.headers.get("Authorization")?.split(" ")[1];
+    return { ...data, accessToken };
+}
+
+// ENDPOINT: /api/auth/vailidate
+export async function verifyEmail(verificationCode, accessToken) {
+    const response = await fetch(`${API_BASE_URL}/auth/validate`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ verificationCode })
+    });
+
+    return apiResponse(response, "Error al verificar el email");
+}
+
+// ENDPOINT: /api/auth/login
+export async function loginUser({ email, password }) {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password })
+    });
+
+    const data = await apiResponse(response, "Error al iniciar sesión");
+    const accessToken = response.headers.get('Authorization')?.split(' ')[1];
+    return { ...data, accessToken };
+}
+

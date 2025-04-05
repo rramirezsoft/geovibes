@@ -94,7 +94,7 @@ const changePasswordCtrl = async (req, res) => {
 const deleteUserCtrl = async (req, res) => {
     try {
         const userId = req.user._id;
-        const softDelete = req.query.soft !== "false"; // Soft delete por defecto
+        const softDelete = req.query.soft !== "false"; 
 
         const message = await deleteUser(userId, softDelete);
 
