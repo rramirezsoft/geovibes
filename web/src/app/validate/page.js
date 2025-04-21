@@ -1,29 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import Cookies from "js-cookie";
 import { verifyEmail } from "@/api/auth";
-import { parseApiError } from "@/utils/parseError"; 
+import { parseApiError } from "@/utils/parseError";
 import { ERROR_MESSAGES } from "@/constants/errorMessages";
 
+const schema = z.object({
+  verificationCode: z
+    .string()
+    .length(6, "El código debe tener 6 dígitos")
+    .regex(/^\d+$/, "El código solo debe contener números"),
+});
+
 export default function ValidateEmailPage() {
-  const [code, setCode] = useState("");
-  const [message, setMessage] = useState("");
   const router = useRouter();
+  const [message, setMessage] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = async (data) => {
     setMessage("Validando...");
-
+    const accessToken = Cookies.get("accessToken");
     try {
-      await verifyEmail(code, accessToken);
+      await verifyEmail(data.verificationCode, accessToken);
       Cookies.remove("accessToken");
       router.push("/login");
     } catch (err) {
-      const message = parseApiError(err);
-      setMessage(ERROR_MESSAGES[message] || message || ERROR_MESSAGES.DEFAULT);
-
+      const parsed = parseApiError(err);
+      setMessage(ERROR_MESSAGES[parsed] || parsed || ERROR_MESSAGES.DEFAULT);
     }
   };
 
@@ -33,23 +48,32 @@ export default function ValidateEmailPage() {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           Verifica tu email
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+
+        {message && (
+          <div className="bg-red-100 text-red-700 p-3 mb-4 rounded-md text-sm text-center">
+            {message}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <input
             type="text"
             placeholder="Código de verificación"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
+            {...register("verificationCode")}
             className="w-full p-3 border border-gray-300 rounded-md"
-            required
           />
+          {errors.verificationCode && (
+            <p className="text-red-500 text-sm">{errors.verificationCode.message}</p>
+          )}
+
           <button
             type="submit"
+            disabled={isSubmitting}
             className="w-full bg-blue-500 text-white p-3 rounded-md font-semibold hover:bg-blue-600 transition-all"
           >
             Verificar
           </button>
         </form>
-        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
       </div>
     </div>
   );

@@ -68,6 +68,7 @@ export default function RegisterPage() {
             placeholder="Nickname"
             {...register("nickname")}
             className="w-full p-3 border border-gray-300 rounded-md"
+            required
           />
           {errors.nickname && <p className="text-red-500 text-sm">{errors.nickname.message}</p>}
 
@@ -76,6 +77,7 @@ export default function RegisterPage() {
             placeholder="Email"
             {...register("email")}
             className="w-full p-3 border border-gray-300 rounded-md"
+            required
           />
           {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
 
@@ -84,6 +86,7 @@ export default function RegisterPage() {
             placeholder="Contraseña"
             {...register("password")}
             className="w-full p-3 border border-gray-300 rounded-md"
+            required
           />
           {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
 

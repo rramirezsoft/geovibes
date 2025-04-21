@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 
@@ -8,12 +7,11 @@ export default function LandingPage() {
   const [showMenu, setShowMenu] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-4 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-4 flex flex-col font-baloo">
       {/* Navbar */}
       <nav className="flex justify-between items-center p-4 bg-transparent text-white">
-        <div className="flex items-center space-x-2">
-          <Image src="/logo.png" alt="GeoVibes Logo" width={40} height={40} />
-          <h1 className="text-2xl font-bold">GeoVibes</h1>
+        <div className="flex items-center space-x-2">      
+          <h1 className="text-2xl ">GeoVibes</h1>
         </div>
         <div className="hidden md:flex space-x-4">
           <a href="/login" className="hover:underline">Login</a>
@@ -39,7 +37,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="flex-1 flex flex-col justify-center items-center text-center text-white">
-        <h2 className="text-4xl md:text-6xl font-bold mb-4">Mark Your Moments, Share Your Journey</h2>
+        <h2 className="text-4xl md:text-6xl mb-4">Mark Your Moments, Share Your Journey</h2>
         <p className="text-lg md:text-2xl mb-6">Discover and share your experiences around the world with GeoVibes.</p>
         <div className="space-x-4">
           <a href="/login" className="px-6 py-3 bg-blue-500 rounded-md text-white hover:bg-blue-600">Login</a>
