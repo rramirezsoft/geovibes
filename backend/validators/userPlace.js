@@ -27,4 +27,13 @@ const validatorUserPlaceFilters = [
     check("status").optional().isString().isIn(validStatuses).withMessage("El estado debe ser uno de los siguientes: visited, favorite, pending"),
 ]
 
-module.exports = { validatorCreateUserPlace, validatorUserPlaceFilters};
+const validatorPlaceId = [
+    check("id")
+        .exists().withMessage("El ID del userPlace es obligatorio")
+        .notEmpty().withMessage("El ID del userPlace no puede estar vacío")
+        .isMongoId().withMessage("El ID del userPlace no es válido"),
+
+    (req, res, next) => validateResults(req, res, next)
+];
+
+module.exports = { validatorCreateUserPlace, validatorUserPlaceFilters, validatorPlaceId };

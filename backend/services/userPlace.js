@@ -80,7 +80,7 @@ const updateUserPlace = async (userId, placeId, status, visitedAt = null) => {
 
 /**
  * Obtiene los lugares registrados de un usuario, con filtros de categoria y/o estado.
- * @param {String} userId - ID del usuario
+ * @param {ObjectId} userId - ID del usuario
  * @param {String} category - Categoría del lugar (opcional)
  * @param {String} status - Estado del lugar (opcional)
  * @returns {Array} - Lista de lugares del usuario
@@ -100,6 +100,26 @@ const getUserPlaces = async (userId, category = null, status = null) => {
         throw error;
     }
 };
+
+/**
+ * Obtiene un lugar específico registrado por un usuario.
+ * @param {ObjectId} userId - ID del usuario.
+ * @param {ObjectId} placeId - ID del lugar.
+ * @returns {Object} - Detalle del lugar registrado del usuario.
+ */
+const getUserPlaceById = async (userId, userPlaceId) => {
+    try {
+        const userPlace = await UserPlace.findOne({ _id: userPlaceId, user: userId })
+            .populate("place", "name location address country city category");
+
+        if (!userPlace) throw { status: 404, message: "USER_PLACE_NOT_FOUND" };
+
+        return { message: "USER_PLACE_FOUND", userPlace };
+    } catch (error) {
+        console.error("❌ Error en getUserPlaceById:", error);
+        throw error;
+    }
+}
 
 /**
  * Elimina un UserPlace (soft delete o hard delete).
@@ -149,4 +169,4 @@ const countUserPlaces = async (userId, category = null, status = null) => {
     }
 };
 
-module.exports = { createUserPlace, updateUserPlace, getUserPlaces, deleteUserPlace, countUserPlaces };
+module.exports = { createUserPlace, updateUserPlace, getUserPlaces, getUserPlaceById, deleteUserPlace, countUserPlaces };

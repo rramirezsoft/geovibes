@@ -240,7 +240,7 @@ const refreshTokenService = (user) => {
 
 /**
  * Cierra la sesión del usuario eliminando el Refresh Token
- * @param {String} userId - ID del usuario
+ * @param {ObjectId} userId - ID del usuario
  * 
  */
 const logoutUser = async (userId) => {

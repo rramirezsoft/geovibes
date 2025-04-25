@@ -4,7 +4,7 @@ const { compare, encrypt } = require('../utils/handlePassword');
 
 /**
  * Completa el registro del usuario.
- * @param {Object} userId - ID del usuario autenticado
+ * @param {ObjectId} userId - ID del usuario autenticado
  * @param {Object} profileData - Datos del perfil (nombre, apellidos, fecha de nacimiento)
  * @returns {Object} - El usuario actualizado
  */
@@ -28,7 +28,7 @@ const completeRegister = async (userId, profileData) => {
 
 /**
  * Sube un logo de usuario a Pinata (IPFS) y guarda la URL en la base de datos.
- * @param {string} userId - ID del usuario autenticado.
+ * @param {ObjectId} userId - ID del usuario autenticado.
  * @param {Buffer} fileBuffer - Datos del archivo de imagen en formato buffer.
  * @param {string} fileName - Nombre del archivo a subir.
  * @returns {Object} - Usuario actualizado con la URL del logo.
@@ -95,7 +95,7 @@ const updateUserProfile = async (userId, profileData) => {
 
 /**
  * Obtiene los datos del usuario autenticado.
- * @param {string} userId - ID del usuario autenticado.
+ * @param {ObjectId} userId - ID del usuario autenticado.
  * @returns {Object} - Datos del usuario sin la contraseña.
  */
 const getUserProfile = async (userId) => {
@@ -110,7 +110,7 @@ const getUserProfile = async (userId) => {
 
 /**
  * Cambia la contraseña del usuario.
- * @param {String} userId - ID del usuario
+ * @param {ObjectId} userId - ID del usuario
  * @param {String} currentPassword - Contraseña actual
  * @param {String} newPassword - Nueva contraseña
  * @returns {Object} - Mensaje de éxito
@@ -143,7 +143,7 @@ const changePassword = async (userId, currentPassword, newPassword) => {
 
 /**
  *  Delete de un usuario
- * @param {String} userId - ID del usuario a eliminar
+ * @param {ObjectId} userId - ID del usuario a eliminar
  * @param {Boolean} isSoft - Si es true, realiza un soft delete, sino, hard delete
  * @returns {String} - Mensaje de éxito
  */

@@ -1,5 +1,12 @@
 const { matchedData } = require("express-validator");
-const { createUserPlace, updateUserPlace, getUserPlaces, deleteUserPlace, countUserPlaces } = require("../services/userPlace");
+const { 
+    createUserPlace, 
+    updateUserPlace, 
+    getUserPlaces, 
+    getUserPlaceById, 
+    deleteUserPlace, 
+    countUserPlaces 
+} = require("../services/userPlace");
 const { handleHttpError } = require("../utils/handleError");
 
 const createUserPlaceCtrl = async (req, res) => {
@@ -38,6 +45,18 @@ const getUserPlacesCtrl = async (req, res) => {
     }
 };
 
+const getUserPlaceByIdCtrl = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user._id;
+
+        const result = await getUserPlaceById(userId, id);
+        res.status(200).json(result);
+    } catch (error) {
+        handleHttpError(res, error.message, error.status || 400);
+    }
+}
+
 const deleteUserPlaceCtrl = async (req, res) => {
     try {
         const { id } = req.params;
@@ -63,4 +82,11 @@ const countUserPlacesCtrl = async (req, res) => {
     }
 };
 
-module.exports = { createUserPlaceCtrl, updateUserPlaceCtrl, getUserPlacesCtrl, deleteUserPlaceCtrl, countUserPlacesCtrl };
+module.exports = { 
+    createUserPlaceCtrl, 
+    updateUserPlaceCtrl, 
+    getUserPlacesCtrl, 
+    getUserPlaceByIdCtrl, 
+    deleteUserPlaceCtrl, 
+    countUserPlacesCtrl 
+};

@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2ViYjk4OTE3YTMyNjdiYzQ0M2FiNDUiLCJpYXQiOjE3NDM1NTAyOTEsImV4cCI6MTc0MzU1NzQ5MX0.weupkvsaP5GaTNDSmQU2HiAT7xydUMqcYwph8qiCBVo
+@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2ViYjk4OTE3YTMyNjdiYzQ0M2FiNDUiLCJpYXQiOjE3NDU1Njc3NDAsImV4cCI6MTc0NTU3NDk0MH0.REQksrFbguO8j-hYP6yU1QHuDkSiay8S8jd0tMbO_hQ
 
 ### Crear un Lugar de Usuario
 POST {{baseUrl}}/api/userPlace/create HTTP/1.1
@@ -47,6 +47,10 @@ Authorization: {{accessToken}}
 
 ### Obtener UserPlaces filtrados por categoría y estado
 GET {{baseUrl}}/api/userPlace?category=station&status=visited
+Authorization: {{accessToken}}
+
+### Obtener UserPlaces por ID
+GET {{baseUrl}}/api/userPlace/67eeb54dc070b2d8d9b84859
 Authorization: {{accessToken}}
 
 ### Eliminar UserPlace (soft delete)

@@ -10,13 +10,13 @@ const validatorCreatePlace = [
     (req, res, next) => validateResults(req, res, next)
 ];
 
-const validatorGetPlaceById = [
+const validatorPlaceId = [
     check("id")
-        .exists().withMessage("El id del lugar es obligatorio")
-        .notEmpty().withMessage("El id del lugar no puede estar vacío")
-        .isMongoId().withMessage("El id del lugar no es válido"),
+        .exists().withMessage("El ID del lugar es obligatorio")
+        .notEmpty().withMessage("El ID del lugar no puede estar vacío")
+        .isMongoId().withMessage("El ID del lugar no es válido"),
 
     (req, res, next) => validateResults(req, res, next)
 ];
 
-module.exports = { validatorCreatePlace, validatorGetPlaceById };
+module.exports = { validatorCreatePlace, validatorPlaceId };
