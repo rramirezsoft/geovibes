@@ -74,7 +74,7 @@ const refreshAuthMiddleware = async (req, res, next) => {
         
     } catch (err) {
         console.error("❌ Error en refreshAuthMiddleware:", err.message);
-        handleHttpError(res, "NOT_SESSION", 500);
+        handleHttpError(res, "NOT_SESSION", err.status || 500);
     }
 };
 

@@ -17,7 +17,7 @@ const createUserPlaceCtrl = async (req, res) => {
         const result = await createUserPlace(userId, placeId, status, visitedAt);
         res.status(201).json(result);
     } catch (error) {
-        handleHttpError(res, error.message, 400);
+        handleHttpError(res, error.message, error.status || 500);
     }
 };
 
@@ -29,7 +29,7 @@ const updateUserPlaceCtrl = async (req, res) => {
         const result = await updateUserPlace(userId, placeId, status, visitedAt);
         res.status(200).json(result);
     } catch (error) {
-        handleHttpError(res, error.message, error.status || 400);
+        handleHttpError(res, error.message, error.status || 500);
     }
 };
 
@@ -41,7 +41,7 @@ const getUserPlacesCtrl = async (req, res) => {
         const result = await getUserPlaces(userId, category, status);
         res.status(200).json(result);
     } catch (error) {
-        handleHttpError(res, error.message, 400);
+        handleHttpError(res, error.message, error.status || 500);
     }
 };
 
@@ -53,7 +53,7 @@ const getUserPlaceByIdCtrl = async (req, res) => {
         const result = await getUserPlaceById(userId, id);
         res.status(200).json(result);
     } catch (error) {
-        handleHttpError(res, error.message, error.status || 400);
+        handleHttpError(res, error.message, error.status || 500);
     }
 }
 
@@ -66,7 +66,7 @@ const deleteUserPlaceCtrl = async (req, res) => {
         const result = await deleteUserPlace(userId, id, soft !== "false"); 
         res.status(200).json(result);
     } catch (error) {
-        handleHttpError(res, error.message, error.status || 400);
+        handleHttpError(res, error.message, error.status || 500);
     }
 };
 
@@ -78,7 +78,7 @@ const countUserPlacesCtrl = async (req, res) => {
         const result = await countUserPlaces(userId, category, status);
         res.status(200).json(result);
     } catch (error) {
-        handleHttpError(res, error.message, error.status || 400);
+        handleHttpError(res, error.message, error.status || 500);
     }
 };
 

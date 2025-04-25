@@ -34,7 +34,7 @@ const verifyEmailCtrl = async (req, res) => {
         const result = await verifyUserCode(user, verificationCode);
         res.status(200).send(result);
     } catch (err) {
-        handleHttpError(res, err.message, err.status || 400);
+        handleHttpError(res, err.message, err.status || 500);
     }
 };
 
@@ -44,7 +44,7 @@ const resendVerificationCodeCtrl = async (req, res) => {
         const result = await resendVerificationCode(user);
         res.status(200).send(result);
     } catch (err) {
-        handleHttpError(res, err.message, err.status || 400);
+        handleHttpError(res, err.message, err.status || 500);
     }
 };
 
@@ -65,7 +65,7 @@ const loginCtrl = async (req, res) => {
             .header("Authorization", `Bearer ${accessToken}`)
             .json({ user });
     } catch (err) {
-        handleHttpError(res, err.message, err.status || 400);
+        handleHttpError(res, err.message, err.status || 500);
     }
 };
 

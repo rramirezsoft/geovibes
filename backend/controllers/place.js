@@ -13,7 +13,7 @@ const findOrCreatePlaceCtrl = async (req, res) => {
             place: result.place,
         });
     } catch (error) {
-        handleHttpError(res, error.message, 400);
+        handleHttpError(res, error.message, error.status || 500);
     }
 };
 
@@ -22,7 +22,7 @@ const getPlacesCtrl = async (req, res) => {
         const places = await getPlaces();
         res.status(200).json(places);
     } catch (error) {
-        handleHttpError(res, error.message, 500);
+        handleHttpError(res, error.message, error.status || 500);
     }
 };
 
