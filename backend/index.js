@@ -37,7 +37,7 @@ require('./jobs/cleanUnverifiedUsers.js'); // Limpia usuarios no verificados
 
 // Configuración de CORS
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || '*', // Permite que solo el frontend se comunique con el backend
+    origin: process.env.FRONTEND_URL || 'http://localhost:8080', // Permite que solo el frontend se comunique con el backend
     credentials: true,                       // Permite enviar cookies y cabeceras
 }
 
