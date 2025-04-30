@@ -28,21 +28,27 @@ export default function LandingPage() {
       <div className="relative z-10 flex flex-col min-h-screen text-white font-baloo">
         <Navbar />
 
-      {/* Hero */}
-      <div className="flex-1 flex flex-col justify-center items-center text-center px-[5%]">
-        <h2 className="font-bold mb-4 leading-tight break-words -translate-y-4 sm:-translate-y-6 md:-translate-y-8">
-          <span className="hidden lg:inline text-5xl xl:text-6xl">
-            Mark Your Moments, Share Your Journey
-          </span>
-          <span className="block lg:hidden text-4xl sm:text-5xl md:text-6xl leading-snug">
-            Mark Your Moments,<br />
-            Share Your Journey
-          </span>
-        </h2>
-        <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-10 -translate-y-4 sm:-translate-y-6 md:-translate-y-8">
-          GeoVibes
-        </h3>
-      </div>
+        {/* Hero */}
+        <div className="flex-1 flex flex-col justify-center items-center text-center px-[5%]">
+          <h2 className="font-bold mb-4 leading-tight break-words">
+            <span className="hidden lg:inline text-5xl xl:text-6xl">
+              Mark Your Moments, Share Your Journey
+            </span>
+            <span className="block lg:hidden text-4xl sm:text-5xl md:text-6xl leading-snug">
+              Mark Your Moments,<br />
+              Share Your Journey
+            </span>
+          </h2>
+          <div className="mb-10 w-full flex justify-center px-6">
+            <Image
+              src="/img/geovibes_logo.png"
+              alt="GeoVibes Logo"
+              width={240} 
+              height={120}
+              className="w-[140px] sm:w-[160px] md:w-[200px] lg:w-[220px] xl:w-[240px] h-auto object-contain"
+            />
+          </div>
+        </div>
 
         {/* Buttons */}
         <div className="flex justify-center space-x-6 pb-10">
