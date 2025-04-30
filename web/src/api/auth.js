@@ -38,6 +38,7 @@ export async function verifyEmail(verificationCode, accessToken) {
 
 // ENDPOINT: /api/auth/login
 export async function loginUser({ email, password }) {
+    console.log("API_BASE_URL", API_BASE_URL);
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
