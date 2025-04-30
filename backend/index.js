@@ -40,8 +40,9 @@ require('./jobs/cleanUnverifiedUsers.js'); // Limpia usuarios no verificados
 
 // Configuración de CORS
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:8080', // Permite que solo el frontend se comunique con el backend
+    origin: process.env.FRONTEND_URL, // Permite que solo el frontend se comunique con el backend
     credentials: true,                       // Permite enviar cookies y cabeceras
+    exposedHeaders: ['Authorization'], // Permite enviar la cabecera Authorization en la respuesta
 }
 
 // logs con slack
@@ -60,7 +61,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc));
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
-app.use(errorHandler);
 
 // Rutas
 app.use('/api/auth', authRoutes);

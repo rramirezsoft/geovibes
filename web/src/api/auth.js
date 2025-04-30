@@ -13,7 +13,7 @@ export async function registerUser(formData) {
             nickname: formData.get("nickname"),
             email: formData.get("email"),
             password: formData.get("password"),
-        })
+        }),
     });
     const data = await apiResponse(response, "Error al registrar usuario");
     const accessToken = response.headers.get("Authorization")?.split(" ")[1];
@@ -28,7 +28,7 @@ export async function verifyEmail(verificationCode, accessToken) {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ verificationCode })
+        body: JSON.stringify({ verificationCode }),
     });
 
     return apiResponse(response, "Error al verificar el email");
@@ -41,7 +41,8 @@ export async function loginUser({ email, password }) {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
+        credentials: "include",
     });
 
     const data = await apiResponse(response, "Error al iniciar sesión");
