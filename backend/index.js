@@ -6,6 +6,9 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
+// Middlewares
+const errorHandler = require('./middleware/errorHandler.js');
+
 // Configurations 
 const { connectMongoDB } = require('./config/mongo.js');
 const { connectRedis } = require('./config/redis.js');
@@ -57,6 +60,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc));
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+app.use(errorHandler);
 
 // Rutas
 app.use('/api/auth', authRoutes);
