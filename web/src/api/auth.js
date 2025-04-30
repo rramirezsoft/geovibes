@@ -2,7 +2,7 @@
 
 import { apiResponse } from "@/utils/apiResponse";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000/api";
 
 // ENDPOINT: /api/auth/register
 export async function registerUser(formData) {
