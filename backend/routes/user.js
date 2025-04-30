@@ -22,8 +22,8 @@ const router = express.Router();
 router.put("/complete-register", authMiddleware, validatorCompleteRegister, completeRegisterCtrl);
 router.patch('/profile-picture', authMiddleware, uploadMiddlewareMemory.single('profilePicture'), validatorProfilePicture, uploadProfilePictureCtrl);
 router.patch("/update-profile", authMiddleware, validatorUpdateProfile, updateProfileCtrl);
-router.get("/", authMiddleware, getUserProfileCtrl);
 router.put("/change-password", authMiddleware, validatorChangePassword, changePasswordCtrl);
+router.get("/", authMiddleware, getUserProfileCtrl);
 router.delete("/", authMiddleware, deleteUserCtrl);
 router.post('/reactivate/:id', authMiddleware, reactivateUserCtrl);
 

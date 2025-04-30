@@ -11,7 +11,7 @@ describe('Auth - Onboarding endpoints', () => {
 
     // ENDPOINT: /api/auth/register
 
-    // ✅ Caso 1: Registro exitoso con rol de usuario
+    // Caso 1: Registro exitoso con rol de usuario
     it('✔️ Should register a user successfully with user rol', async () => {
         const response = await request(app)
             .post('/api/auth/register')
@@ -33,7 +33,7 @@ describe('Auth - Onboarding endpoints', () => {
         verificationCode = response.body.user.verificationCode;
     });
 
-    // ✅ Caso 2: Registro exitoso con rol de admin
+    // Caso 2: Registro exitoso con rol de admin
     it('✔️ Should register a user successfully with admin rol', async () => {
         const response = await request(app)
             .post('/api/auth/register')
@@ -53,7 +53,7 @@ describe('Auth - Onboarding endpoints', () => {
         adminId = response.body.user._id;
     });
 
-    // ✅ Caso 3: Nickname duplicado
+    // Caso 3: Nickname duplicado
     it('❌ Should fail if nickname is already in use', async () => {
         const response = await request(app)
             .post('/api/auth/register')
@@ -68,7 +68,7 @@ describe('Auth - Onboarding endpoints', () => {
         expect(response.body.message).toEqual('NICKNAME_ALREADY_EXISTS');
     });
 
-    // ✅ Caso 4: Email duplicado
+    // Caso 4: Email duplicado
     it('❌ Should fail if email is already in use', async () => {
         const response = await request(app)
             .post('/api/auth/register')
@@ -83,7 +83,7 @@ describe('Auth - Onboarding endpoints', () => {
         expect(response.body.message).toEqual('EMAIL_ALREADY_EXISTS');
     });
 
-    // ✅ Caso 5: Formato de email inválido
+    // Caso 5: Formato de email inválido
     it('❌ Should fail if email format is invalid', async () => {
         const response = await request(app)
             .post('/api/auth/register')
@@ -98,7 +98,7 @@ describe('Auth - Onboarding endpoints', () => {
         expect(response.body.errors[0].msg).toContain('El email no es válido');
     });
 
-    // ✅ Caso 6: Contraseña muy corta
+    // Caso 6: Contraseña muy corta
     it('❌ Should fail if password is too short', async () => {
         const response = await request(app)
             .post('/api/auth/register')
@@ -113,7 +113,7 @@ describe('Auth - Onboarding endpoints', () => {
         expect(response.body.errors[0].msg).toContain('La contraseña debe tener entre 8 y 16 caracteres');
     });
 
-    // ✅ Caso 7: Nickname con caracteres no permitidos
+    // Caso 7: Nickname con caracteres no permitidos
     it('❌ Should fail if nickname has invalid characters', async () => {
         const response = await request(app)
             .post('/api/auth/register')
@@ -128,7 +128,7 @@ describe('Auth - Onboarding endpoints', () => {
         expect(response.body.errors[0].msg).toContain('Solo se permiten letras, números y guiones bajos');
     });
 
-    // ✅ Caso 8: Faltan campos obligatorios
+    // Caso 8: Faltan campos obligatorios
     it('❌ Should fail if required fields are missing', async () => {
         const response = await request(app)
             .post('/api/auth/register')
@@ -144,9 +144,8 @@ describe('Auth - Onboarding endpoints', () => {
 
     // ENDPOINT: /api/auth/validate
 
-    // ✅ Caso 1: Validación exitosa de email del usuario
+    // Caso 1: Validación exitosa de email del usuario
     it('✔️ Should validate email successfully', async () => {
-        console.log("Token before validation:", accessToken);
         const response = await request(app)
             .put('/api/auth/validate')
             .auth(accessToken, { type: 'bearer' })

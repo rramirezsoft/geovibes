@@ -14,9 +14,10 @@ const router = express.Router();
 
 router.post('/create', authMiddleware, validatorCreateUserPlace, createUserPlaceCtrl);
 router.patch('/update', authMiddleware, validatorCreateUserPlace, updateUserPlaceCtrl);
+router.get('/count', authMiddleware, validatorUserPlaceFilters, countUserPlacesCtrl); 
 router.get('/', authMiddleware, validatorUserPlaceFilters, getUserPlacesCtrl);
 router.get('/:id', authMiddleware, validatorPlaceId, getUserPlaceByIdCtrl);
 router.delete('/:id', authMiddleware, validatorPlaceId, deleteUserPlaceCtrl);
-router.get('/count', authMiddleware, validatorUserPlaceFilters, countUserPlacesCtrl);
+
 
 module.exports = router;
