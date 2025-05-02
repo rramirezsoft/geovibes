@@ -9,7 +9,7 @@ export const ERROR_MESSAGES = {
     // Login
     INVALID_CREDENTIALS: "Email o contraseña incorrectos.",
     //middleware
-    EMAIL_NOT_VERIFIED: "Debes verificar tu email antes de iniciar sesión.",
+    EMAIL_NOT_VERIFIED: "Email no verificado.",
     NOT_TOKEN: "No se encontró el token de acceso.",
     NOT_AUTHORIZED: "No autorizado.",
     NOT_SESSION: "No hay sesión activa.",

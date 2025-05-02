@@ -11,12 +11,12 @@ const authMiddleware = async (req, res, next) => {
         const authHeader = req.headers.authorization;
 
         // Verificar si hay token en la cabecera
-        if (!authHeader) {handleHttpError(res, "NOT_TOKEN", 401); return; }
-
-        // Extraer el token de la cabecera
         const token = authHeader.split(' ').pop();
-        if (!token) { handleHttpError(res, "NOT_TOKEN", 401); return;}
-
+        if (!authHeader || !token || token === "undefined") {
+            handleHttpError(res, "NOT_TOKEN", 401);
+            return; 
+        }
+    
         // Verificar el Access Token
         const dataToken = verifyAccessToken(token);
         if (dataToken && dataToken._id) {

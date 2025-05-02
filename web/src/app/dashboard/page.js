@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { getUser } from "@/api/user"; 
 import Image from "next/image"; 
+import { ERROR_MESSAGES } from "@/constants/errorMessages";
+import { parseApiError } from "@/utils/parseError";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -20,7 +22,8 @@ export default function Dashboard() {
         setUser(userData.user);
         setLoading(false);
       } catch (err) {
-        setError("Hubo un error al obtener los datos del usuario.");
+        const parsed = parseApiError(err);
+        setError(ERROR_MESSAGES[parsed] || parsed || ERROR_MESSAGES.DEFAULT);
         setLoading(false);
       }
     };

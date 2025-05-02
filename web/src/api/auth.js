@@ -50,3 +50,26 @@ export async function loginUser({ email, password }) {
     return { ...data, accessToken };
 }
 
+// ENDPOINT: /api/auth/refresh
+export async function refreshAccessToken() {
+    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+        method: "POST",
+        credentials: "include", 
+    });
+
+    const data = await apiResponse(response, "Error al refrescar token");
+    const accessToken = data?.accessToken;
+    return accessToken;
+}
+
+// ENDPOINT: /api/auth/logout
+export async function logoutUser() {
+    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+    });
+
+    return apiResponse(response, "Error al cerrar sesión");
+}
+
+

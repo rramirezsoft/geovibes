@@ -6,9 +6,6 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
-// Middlewares
-const errorHandler = require('./middleware/errorHandler.js');
-
 // Configurations 
 const { connectMongoDB } = require('./config/mongo.js');
 const { connectRedis } = require('./config/redis.js');
