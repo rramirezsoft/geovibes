@@ -14,7 +14,7 @@ export const ERROR_MESSAGES = {
     NOT_AUTHORIZED: "No autorizado.",
     NOT_SESSION: "No hay sesión activa.",
     // refresh token
-    NO_REFRESH_TOKEN_PROVIDED: "No se encontró el token de actualización.",
+    NO_REFRESH_TOKEN_PROVIDED: "No se encontró el token de refresco.",
     INVALID_REFRESH_TOKEN: "Token de actualización inválido.",
     REFRESH_TOKEN_MISMATCH: "El token de actualización no coincide.",
     // general
