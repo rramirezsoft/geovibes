@@ -34,7 +34,7 @@ export default function LoginPage() {
       const result = await loginUser(data);
 
       if (result.accessToken) {
-        Cookies.set("accessToken", result.accessToken, { secure: true });
+        Cookies.set("accessToken", result.accessToken, { secure: true, sameSite: "None", expires: 1/12 });
       }
       router.push("/dashboard");
     } catch (err) {

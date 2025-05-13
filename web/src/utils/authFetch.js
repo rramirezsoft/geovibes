@@ -11,7 +11,8 @@ export async function authFetch(url, options = {}, retry = true) {
       if (newAccessToken) {
         Cookies.set("accessToken", newAccessToken, {
           secure: true,
-          sameSite: "Strict",
+          sameSite: "None",
+          expires: 1 / 12,
         });
         accessToken = newAccessToken;
       } else {
@@ -26,8 +27,14 @@ export async function authFetch(url, options = {}, retry = true) {
   const headers = {
     ...options.headers,
     Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
   };
+
+  // Si el método requiere body, añadimos Content-Type
+  const method = (options.method || "GET").toUpperCase();
+    if (["POST", "PUT", "PATCH"].includes(method)) {
+      headers["Content-Type"] = "application/json";
+    }
+
 
   let response = await fetch(url, {
     ...options,

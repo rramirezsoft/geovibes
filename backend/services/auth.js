@@ -3,7 +3,8 @@ const { encrypt, compare } = require('../utils/handlePassword');
 const { 
     generateAccessToken,
     generateRefreshToken, 
-    saveRefreshToken,  
+    saveRefreshToken, 
+    getRefreshToken, 
     deleteRefreshToken
     } = require('../utils/handleJwt');
 const { sendEmail } = require('../utils/handleEmail');
@@ -135,12 +136,17 @@ const loginUser = async (email, password) => {
         
         if (!isPasswordValid) { throw { status: 401, message: "INVALID_CREDENTIALS" }; }
 
-        // Genera tokens
+        // Genera access token
         const accessToken = generateAccessToken(user);
-        const refreshToken = generateRefreshToken(user);
+        
+        // Intenta obtener un refreshToken ya existente
+        let refreshToken = await getRefreshToken(user._id);
 
-        // Guardamos el refresh token en Redis
-        await saveRefreshToken(user._id, refreshToken);
+        if (!refreshToken) {
+            // Si no hay, genera uno nuevo
+            refreshToken = generateRefreshToken(user);
+            await saveRefreshToken(user._id, refreshToken);
+        }
 
         user.set("password", undefined, { strict: false });
 

@@ -7,12 +7,24 @@ import { getUser } from "@/api/user";
 import Image from "next/image"; 
 import { ERROR_MESSAGES } from "@/constants/errorMessages";
 import { parseApiError } from "@/utils/parseError";
+import { logoutUser } from "@/api/auth";
 
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const accessToken = Cookies.get("accessToken");
+
+  const handleLogout = async () => {
+  try {
+    await logoutUser(accessToken); 
+    Cookies.remove("accessToken"); 
+    router.push("/");
+  } catch (err) {
+    console.error("Error al cerrar sesión:", err);
+  }
+};
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -76,6 +88,14 @@ export default function Dashboard() {
             <strong className="text-gray-700">Fecha de nacimiento:</strong>
             <p className="text-gray-900">{new Date(user.birthDate).toLocaleDateString()}</p>
           </div>
+        </div>
+        <div className="mt-6 text-center">
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+          >
+            Cerrar sesión
+          </button>
         </div>
       </div>
     </div>

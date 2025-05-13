@@ -63,10 +63,13 @@ export async function refreshAccessToken() {
 }
 
 // ENDPOINT: /api/auth/logout
-export async function logoutUser() {
+export async function logoutUser(accessToken) {
     const response = await fetch(`${API_BASE_URL}/auth/logout`, {
         method: "POST",
         credentials: "include",
+        headers: {
+            "Authorization": `Bearer ${accessToken}`,
+        },
     });
 
     return apiResponse(response, "Error al cerrar sesión");
