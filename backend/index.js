@@ -56,6 +56,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc));
 
 // Middlewares
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Permite preflight requests
 app.use(express.json());
 app.use(cookieParser());
 
@@ -74,7 +75,7 @@ app.get('/', (req, res) => {
     res.send('API funcionando correctamente');
 });
 
-// Health check para Koyeb
+// Health check para Render
 app.get('/health', (req, res) => {
     res.status(200).send('OK');
 });
