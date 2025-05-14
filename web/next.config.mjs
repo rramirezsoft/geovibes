@@ -4,7 +4,7 @@ const nextConfig = {
       remotePatterns: [
         {
           protocol: 'https',
-          hostname: 'gatway.pinata.cloud',
+          hostname: 'gateway.pinata.cloud',
         },
       ]
     },
