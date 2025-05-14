@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-      domains: ['gateway.pinata.cloud'], // Agregamos el dominio de Pinata
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'gatway.pinata.cloud',
+        },
+      ]
     },
   };
 
