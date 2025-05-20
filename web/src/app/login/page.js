@@ -34,7 +34,11 @@ export default function LoginPage() {
       const result = await loginUser(data);
 
       if (result.accessToken) {
-        Cookies.set("accessToken", result.accessToken, { secure: true, sameSite: "None", expires: 1/12 });
+        Cookies.set("accessToken", result.accessToken, {
+          secure: true,
+          sameSite: "None",
+          expires: 1 / 12,
+        });
       }
       router.push("/dashboard");
     } catch (err) {
@@ -47,7 +51,9 @@ export default function LoginPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-4">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">Inicia sesión</h2>
+        <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
+          Inicia sesión
+        </h2>
 
         {message && (
           <div className="bg-red-100 text-red-700 p-3 mb-4 rounded-md text-sm text-center">
@@ -62,7 +68,9 @@ export default function LoginPage() {
             {...register("email")}
             className="w-full p-3 border border-gray-300 rounded-md"
           />
-          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          )}
 
           <input
             type="password"
@@ -70,7 +78,9 @@ export default function LoginPage() {
             {...register("password")}
             className="w-full p-3 border border-gray-300 rounded-md"
           />
-          {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password.message}</p>
+          )}
 
           <button
             type="submit"

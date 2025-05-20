@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @theme inline {
-    --font-inter: var(--font-inter);
-    --font-baloo: var(--font-baloo);
-  }
-
+  --font-inter: var(--font-inter);
+  --font-baloo: var(--font-baloo);
+}

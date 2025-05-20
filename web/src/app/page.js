@@ -13,14 +13,14 @@ export default function LandingPage() {
           alt="Background"
           fill
           className="object-cover hidden md:block"
-          priority
+          sizes="100vw"
         />
         <Image
           src="/img/ld-bg-mobile.png"
           alt="Mobile Background"
           fill
           className="object-cover md:hidden"
-          priority
+          sizes="100vw"
         />
       </div>
 
@@ -35,7 +35,8 @@ export default function LandingPage() {
               Mark Your Moments, Share Your Journey
             </span>
             <span className="block lg:hidden text-4xl sm:text-5xl md:text-6xl leading-snug">
-              Mark Your Moments,<br />
+              Mark Your Moments,
+              <br />
               Share Your Journey
             </span>
           </h2>
@@ -43,7 +44,7 @@ export default function LandingPage() {
             <Image
               src="/img/geovibes_logo.png"
               alt="GeoVibes Logo"
-              width={240} 
+              width={240}
               height={120}
               className="w-[140px] sm:w-[160px] md:w-[200px] lg:w-[220px] xl:w-[240px] h-auto object-contain"
             />

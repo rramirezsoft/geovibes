@@ -63,7 +63,9 @@ export default function ValidateEmailPage() {
             className="w-full p-3 border border-gray-300 rounded-md"
           />
           {errors.verificationCode && (
-            <p className="text-red-500 text-sm">{errors.verificationCode.message}</p>
+            <p className="text-red-500 text-sm">
+              {errors.verificationCode.message}
+            </p>
           )}
 
           <button
