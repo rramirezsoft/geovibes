@@ -1,12 +1,12 @@
 require('dotenv').config();
 
-// -- IMPORTS -- 
+// -- IMPORTS --
 // Core Modules
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
-// Configurations 
+// Configurations
 const { connectMongoDB } = require('./config/mongo.js');
 const { connectRedis } = require('./config/redis.js');
 
@@ -24,11 +24,10 @@ const userRoutes = require('./routes/user.js');
 const placeRoutes = require('./routes/place.js');
 const userPlaceRoutes = require('./routes/userPlace.js');
 
-
 // Inicialización de la app
 const app = express();
 
-// Conexion base de datos 
+// Conexion base de datos
 connectMongoDB(); // MongoDB
 connectRedis(); // Redis
 
@@ -37,19 +36,19 @@ require('./jobs/cleanUnverifiedUsers.js'); // Limpia usuarios no verificados
 
 // Configuración de CORS
 const corsOptions = {
-    origin: process.env.FRONTEND_URL, // Permite que solo el frontend se comunique con el backend
-    credentials: true,                       // Permite enviar cookies y cabeceras
-    exposedHeaders: ['Authorization'], // Permite enviar la cabecera Authorization en la respuesta
-}
+  origin: process.env.FRONTEND_URL, // Permite que solo el frontend se comunique con el backend
+  credentials: true, // Permite enviar cookies y cabeceras
+  exposedHeaders: ['Authorization'], // Permite enviar la cabecera Authorization en la respuesta
+};
 
 // logs con slack
 morganBody(app, {
-    noColors: true,
-    skip: function (req, res) { 
-        return res.statusCode < 500; 
-    },
-    stream: loggerStream
-})
+  noColors: true,
+  skip: function (req, res) {
+    return res.statusCode < 500;
+  },
+  stream: loggerStream,
+});
 
 // Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc));
@@ -72,17 +71,17 @@ const port = process.env.PORT || 3001;
 // Rutas del servidor
 // Ruta de prueba para verificar que el servidor está funcionando
 app.get('/', (req, res) => {
-    res.send('API funcionando correctamente');
+  res.send('API funcionando correctamente');
 });
 
 // Health check para Render
 app.get('/health', (req, res) => {
-    res.status(200).send('OK');
+  res.status(200).send('OK');
 });
 
 // Iniciamos el servidor
 app.listen(port, () => {
-    console.log("Servidor escuchando en el puerto " + port);
+  console.log('Servidor escuchando en el puerto ' + port);
 });
 
 module.exports = app;

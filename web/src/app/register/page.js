@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { registerUser } from "@/api/auth";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { parseApiError } from "@/utils/parseError";
-import { ERROR_MESSAGES } from "@/constants/errorMessages";
-import Image from "next/image";
-import Link from "next/link";
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { registerUser } from '@/api/auth';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { parseApiError } from '@/utils/parseError';
+import { ERROR_MESSAGES } from '@/constants/errorMessages';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const schema = z.object({
   nickname: z
     .string()
     .min(3)
     .max(20)
-    .regex(/^[a-zA-Z0-9_]+$/, "Nickname inválido"),
-  email: z.string().email("Email inválido"),
+    .regex(/^[a-zA-Z0-9_]+$/, 'Nickname inválido'),
+  email: z.string().email('Email inválido'),
   password: z
     .string()
-    .min(8, "La contraseña debe tener al menos 8 caracteres")
-    .max(16, "La contraseña no puede superar los 16 caracteres"),
+    .min(8, 'La contraseña debe tener al menos 8 caracteres')
+    .max(16, 'La contraseña no puede superar los 16 caracteres'),
 });
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
   const {
     register,
@@ -38,20 +38,20 @@ export default function RegisterPage() {
   });
 
   const onSubmit = async (data) => {
-    setMessage("");
+    setMessage('');
     try {
       const formData = new FormData();
-      formData.append("nickname", data.nickname);
-      formData.append("email", data.email);
-      formData.append("password", data.password);
+      formData.append('nickname', data.nickname);
+      formData.append('email', data.email);
+      formData.append('password', data.password);
 
       const result = await registerUser(formData);
 
       if (result.accessToken) {
-        Cookies.set("accessToken", result.accessToken, { secure: true });
+        Cookies.set('accessToken', result.accessToken, { secure: true });
       }
 
-      router.push("/validate");
+      router.push('/validate');
     } catch (err) {
       const parsed = parseApiError(err);
       setMessage(ERROR_MESSAGES[parsed] || parsed || ERROR_MESSAGES.DEFAULT);
@@ -91,34 +91,28 @@ export default function RegisterPage() {
               type="text"
               placeholder="Nickname"
               required
-              {...register("nickname")}
+              {...register('nickname')}
               className="w-full p-3 rounded-lg bg-[#1c1d3d] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {errors.nickname && (
-              <p className="text-red-400 text-sm">{errors.nickname.message}</p>
-            )}
+            {errors.nickname && <p className="text-red-400 text-sm">{errors.nickname.message}</p>}
 
             <input
               type="email"
               placeholder="Correo electrónico"
               required
-              {...register("email")}
+              {...register('email')}
               className="w-full p-3 rounded-lg bg-[#1c1d3d] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {errors.email && (
-              <p className="text-red-400 text-sm">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="text-red-400 text-sm">{errors.email.message}</p>}
 
             <input
               type="password"
               placeholder="Contraseña"
               required
-              {...register("password")}
+              {...register('password')}
               className="w-full p-3 rounded-lg bg-[#1c1d3d] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {errors.password && (
-              <p className="text-red-400 text-sm">{errors.password.message}</p>
-            )}
+            {errors.password && <p className="text-red-400 text-sm">{errors.password.message}</p>}
 
             <button
               type="submit"
@@ -141,14 +135,14 @@ export default function RegisterPage() {
               alt="Google Icon"
               width={24}
               height={24}
-              style={{ objectFit: "contain" }}
+              style={{ objectFit: 'contain' }}
               priority
             />
             Regístrate con Google
           </button>
 
           <p className="text-center text-sm text-gray-300 mt-2">
-            ¿Ya tienes cuenta?{" "}
+            ¿Ya tienes cuenta?{' '}
             <Link href="/login" className="text-blue-400 hover:underline">
               Iniciar sesión
             </Link>

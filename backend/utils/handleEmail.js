@@ -20,7 +20,7 @@ const createTransporter = async () => {
   const getAccessToken = async () => {
     try {
       const accessToken = await oauth2Client.getAccessToken();
-      return accessToken.token; 
+      return accessToken.token;
     } catch (err) {
       console.error('Error obteniendo el token de acceso:', err);
       throw new Error('Error al obtener access token');

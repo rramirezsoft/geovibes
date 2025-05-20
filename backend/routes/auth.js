@@ -1,22 +1,22 @@
-const express = require("express");
-const { 
-    registerCtrl, 
-    verifyEmailCtrl, 
-    resendVerificationCodeCtrl,
-    loginCtrl, 
-    forgotPasswordCtrl, 
-    resetPasswordCtrl,
-    refreshTokenCtrl, 
-    logoutCtrl 
-} = require("../controllers/auth");
-const { 
-    validatorRegister, 
-    validatorCode, 
-    validatorLogin, 
-    validatorForgotPassword, 
-    validatorResetPassword 
-} = require("../validators/auth");
-const { authMiddleware, refreshAuthMiddleware} = require("../middleware/session");
+const express = require('express');
+const {
+  registerCtrl,
+  verifyEmailCtrl,
+  resendVerificationCodeCtrl,
+  loginCtrl,
+  forgotPasswordCtrl,
+  resetPasswordCtrl,
+  refreshTokenCtrl,
+  logoutCtrl,
+} = require('../controllers/auth');
+const {
+  validatorRegister,
+  validatorCode,
+  validatorLogin,
+  validatorForgotPassword,
+  validatorResetPassword,
+} = require('../validators/auth');
+const { authMiddleware, refreshAuthMiddleware } = require('../middleware/session');
 
 const router = express.Router();
 
@@ -108,10 +108,10 @@ const router = express.Router();
  *                   type: string
  *                   example: "ERROR_CREATE_USER"
  */
-router.post("/register", validatorRegister, registerCtrl);
-router.put("/validate", authMiddleware, validatorCode, verifyEmailCtrl);
-router.post("/resend-code", authMiddleware, resendVerificationCodeCtrl);
-router.post("/login", validatorLogin, loginCtrl);
+router.post('/register', validatorRegister, registerCtrl);
+router.put('/validate', authMiddleware, validatorCode, verifyEmailCtrl);
+router.post('/resend-code', authMiddleware, resendVerificationCodeCtrl);
+router.post('/login', validatorLogin, loginCtrl);
 router.post('/forgot-password', validatorForgotPassword, forgotPasswordCtrl);
 router.post('/reset-password', validatorResetPassword, resetPasswordCtrl);
 router.post('/refresh', refreshAuthMiddleware, refreshTokenCtrl);

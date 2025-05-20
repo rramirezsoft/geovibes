@@ -1,34 +1,34 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-import { getUser } from "@/api/user"; 
-import Image from "next/image"; 
-import { ERROR_MESSAGES } from "@/constants/errorMessages";
-import { parseApiError } from "@/utils/parseError";
-import { logoutUser } from "@/api/auth";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+import { getUser } from '@/api/user';
+import Image from 'next/image';
+import { ERROR_MESSAGES } from '@/constants/errorMessages';
+import { parseApiError } from '@/utils/parseError';
+import { logoutUser } from '@/api/auth';
 
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const accessToken = Cookies.get("accessToken");
+  const accessToken = Cookies.get('accessToken');
 
   const handleLogout = async () => {
-  try {
-    await logoutUser(accessToken); 
-    Cookies.remove("accessToken"); 
-    router.push("/");
-  } catch (err) {
-    console.error("Error al cerrar sesión:", err);
-  }
-};
+    try {
+      await logoutUser(accessToken);
+      Cookies.remove('accessToken');
+      router.push('/');
+    } catch (err) {
+      console.error('Error al cerrar sesión:', err);
+    }
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const accessToken = Cookies.get("accessToken");
+      const accessToken = Cookies.get('accessToken');
       try {
         const userData = await getUser(accessToken);
         setUser(userData.user);
@@ -42,7 +42,7 @@ export default function Dashboard() {
 
     fetchUserData();
   }, [router]);
-  
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -59,31 +59,33 @@ export default function Dashboard() {
         <div className="flex items-center justify-center mb-6">
           {/* Foto de perfil */}
           <Image
-            src={user.profilePicture || "/img/placeholder.png"}
+            src={user.profilePicture || '/img/placeholder.png'}
             alt="Foto de perfil"
             className="rounded-full object-cover"
-            width={128}  
-            height={128} 
-            priority 
+            width={128}
+            height={128}
+            priority
           />
         </div>
 
         <div className="space-y-4">
           <div>
             <strong className="text-gray-700">Nombre:</strong>
-            <p className="text-gray-900">{user.name} {user.lastName}</p>
+            <p className="text-gray-900">
+              {user.name} {user.lastName}
+            </p>
           </div>
-          
+
           <div>
             <strong className="text-gray-700">Nickname:</strong>
             <p className="text-gray-900">{user.nickname}</p>
           </div>
-          
+
           <div>
             <strong className="text-gray-700">Email:</strong>
             <p className="text-gray-900">{user.email}</p>
           </div>
-          
+
           <div>
             <strong className="text-gray-700">Fecha de nacimiento:</strong>
             <p className="text-gray-900">{new Date(user.birthDate).toLocaleDateString()}</p>
