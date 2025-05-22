@@ -59,25 +59,37 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-[#0b0c2a] text-white font-baloo">
-      {/* Left - Formulario con fondo degradado */}
-      <div className="relative w-full md:w-1/2 flex items-center justify-center p-8 overflow-hidden">
-        {/* Fondo degradado animado para escritorio */}
-        <div className="hidden md:block absolute inset-0 bg-gradient-to-br from-[#1a1a3d] via-[#14142a] to-[#0b0c2a] opacity-70 blur-sm z-0" />
-        {/* Efecto decorativo (líneas o brillos sutiles) */}
-        <div className="hidden md:block absolute top-10 left-10 w-40 h-40 bg-purple-800 opacity-20 rounded-full blur-3xl animate-pulse" />
-        <div className="hidden md:block absolute bottom-10 right-10 w-32 h-32 bg-blue-700 opacity-20 rounded-full blur-2xl animate-pulse" />
+    <div className="min-h-screen flex flex-col md:flex-row text-white font-baloo relative">
+      {/* Fondo para móviles (pantalla completa) */}
+      <div className="block md:hidden absolute inset-0 -z-10">
+        <Image
+          src="/img/register/bg-mobile.png"
+          alt="GeoVibes Earth Mobile"
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
+
+      {/* Parte izquierda: Formulario con fondo degradado (solo desktop) */}
+      <div className="w-full md:w-1/2 relative flex items-center justify-center p-8">
+        {/* Fondo degradado naranja SOLO en desktop */}
+        <div className="hidden md:block absolute inset-0 -z-10 bg-gradient-to-tr from-[#a84300] via-[#752e00] to-[#2e1300]" />
+
+        {/* Brillos decorativos sutiles */}
+        <div className="hidden md:block absolute bottom-10 left-10 w-48 h-48 bg-orange-700 opacity-20 rounded-full blur-3xl animate-pulse" />
+        <div className="hidden md:block absolute top-16 right-16 w-32 h-32 bg-red-800 opacity-20 rounded-full blur-2xl animate-pulse" />
 
         <div className="relative z-10 w-full max-w-md space-y-6">
           <div className="text-center">
             <Image
-              src="/img/geovibes_logo.png"
+              src="/img/logo/geo.png"
               alt="GeoVibes Logo"
               width={50}
               height={50}
               className="mx-auto mb-4"
             />
-            <h1 className="text-3xl font-bold">Crea tu cuenta</h1>
+            <h1 className="text-4xl">Únete a nosotros</h1>
           </div>
 
           {message && (
@@ -92,7 +104,7 @@ export default function RegisterPage() {
               placeholder="Nickname"
               required
               {...register('nickname')}
-              className="w-full p-3 rounded-lg bg-[#1c1d3d] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 rounded-lg bg-[#2b1e1e]/80 text-white border border-orange-500 placeholder-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
             {errors.nickname && <p className="text-red-400 text-sm">{errors.nickname.message}</p>}
 
@@ -101,7 +113,7 @@ export default function RegisterPage() {
               placeholder="Correo electrónico"
               required
               {...register('email')}
-              className="w-full p-3 rounded-lg bg-[#1c1d3d] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 rounded-lg bg-[#2b1e1e]/80 text-white border border-orange-500 placeholder-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
             {errors.email && <p className="text-red-400 text-sm">{errors.email.message}</p>}
 
@@ -110,28 +122,28 @@ export default function RegisterPage() {
               placeholder="Contraseña"
               required
               {...register('password')}
-              className="w-full p-3 rounded-lg bg-[#1c1d3d] border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 rounded-lg bg-[#2b1e1e]/80 text-white border border-orange-500 placeholder-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
             {errors.password && <p className="text-red-400 text-sm">{errors.password.message}</p>}
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:opacity-90 text-white p-3 rounded-lg font-semibold transition-all"
+              className="w-full bg-gradient-to-r from-[#3b1d1b] via-[#2c223b] to-[#181b2c] text-white p-3 rounded-lg transition-all hover:opacity-90 shadow-md text-xl font-normal"
             >
               Registrarse
             </button>
           </form>
 
           <div className="flex items-center my-4">
-            <div className="flex-grow border-t border-gray-600"></div>
-            <span className="mx-4 text-gray-400 text-sm">O</span>
-            <div className="flex-grow border-t border-gray-600"></div>
+            <div className="flex-grow border-t border-orange-500"></div>
+            <span className="mx-4 text-orange-300 text-sm">O</span>
+            <div className="flex-grow border-t border-orange-500"></div>
           </div>
 
-          <button className="w-full mt-4 bg-black text-white p-3 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition">
+          <button className="w-full mt-4 bg-black/70 text-white p-3 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition">
             <Image
-              src="/img/google.png"
+              src="/img/logo/google.png"
               alt="Google Icon"
               width={24}
               height={24}
@@ -141,24 +153,25 @@ export default function RegisterPage() {
             Regístrate con Google
           </button>
 
-          <p className="text-center text-sm text-gray-300 mt-2">
+          <p className="text-center text-md text-orange-200 mt-2">
             ¿Ya tienes cuenta?{' '}
-            <Link href="/login" className="text-blue-400 hover:underline">
+            <Link href="/login" className="text-orange-400 hover:underline">
               Iniciar sesión
             </Link>
           </p>
         </div>
       </div>
 
-      {/* Right - Imagen con overlay oscuro */}
+      {/* Parte derecha (desktop): Imagen de fondo */}
       <div className="hidden md:block md:w-1/2 relative h-screen">
         <Image
-          src="/img/ld-bg-desktop.png"
+          src="/img/landing/bg-desktop.png"
           alt="GeoVibes Earth"
           fill
           className="object-cover"
           priority
         />
+        <div className="absolute inset-0 bg-black/30 z-10" />
       </div>
     </div>
   );

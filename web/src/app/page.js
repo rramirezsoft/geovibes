@@ -9,14 +9,14 @@ export default function LandingPage() {
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/img/ld-bg-desktop.png"
+          src="/img/landing/bg-desktop.png"
           alt="Background"
           fill
           className="object-cover hidden md:block"
           sizes="100vw"
         />
         <Image
-          src="/img/ld-bg-mobile.png"
+          src="/img/landing/bg-mobile.png"
           alt="Mobile Background"
           fill
           className="object-cover md:hidden"
@@ -42,7 +42,7 @@ export default function LandingPage() {
           </h2>
           <div className="mb-10 w-full flex justify-center px-6">
             <Image
-              src="/img/geovibes_logo.png"
+              src="/img/logo/geovibes_logo.png"
               alt="GeoVibes Logo"
               width={240}
               height={120}
