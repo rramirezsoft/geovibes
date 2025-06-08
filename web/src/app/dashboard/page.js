@@ -84,10 +84,6 @@ export default function Dashboard() {
             <strong>Email:</strong>
             <p>{user.email}</p>
           </div>
-          <div>
-            <strong>Fecha de nacimiento:</strong>
-            <p>{new Date(user.birthDate).toLocaleDateString()}</p>
-          </div>
         </div>
 
         <div className="mt-6 text-center">
