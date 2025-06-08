@@ -34,11 +34,22 @@ const registerUser = async (userData) => {
     const accessToken = generateAccessToken(newUser);
 
     // Envia email de verificación
-    sendEmail({
-      subject: 'Bienvenido a la API',
-      text: newUser.verificationCode,
-      from: process.env.EMAIL,
+    await sendEmail({
+      subject: 'Verifica tu cuenta en GeoVibes 🌍',
       to: userData.email,
+      from: process.env.EMAIL,
+      html: `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; background: #f9f9f9; padding: 30px; border-radius: 10px;">
+      <h2 style="color: #1d274d;">¡Bienvenido a <span style="color: #8f4de3;">GeoVibes</span>! 🌍</h2>
+      <p>Gracias por registrarte. Para completar tu registro, introduce este código en la aplicación:</p>
+      <div style="font-size: 24px; font-weight: bold; background: #1d274d; color: white; padding: 10px 20px; display: inline-block; border-radius: 6px;">
+        ${newUser.verificationCode}
+      </div>
+      <p style="margin-top: 20px;">Si tú no solicitaste este registro, puedes ignorar este correo.</p>
+      <hr style="margin: 40px 0;" />
+      <p style="font-size: 12px; color: #888;">Este correo fue enviado automáticamente por el sistema de verificación de GeoVibes.</p>
+    </div>
+  `,
     });
 
     // Devuelve el usuario y el token

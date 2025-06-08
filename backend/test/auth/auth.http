@@ -1,13 +1,13 @@
 @baseUrl = http://localhost:3000
-@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2ViYjk4OTE3YTMyNjdiYzQ0M2FiNDUiLCJpYXQiOjE3NDU1Njc3NDAsImV4cCI6MTc0NTU3NDk0MH0.REQksrFbguO8j-hYP6yU1QHuDkSiay8S8jd0tMbO_hQ
+@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODQ1Yjg2ZWU3NjA0YjY3ZDg1ZGU3NGIiLCJpYXQiOjE3NDkzOTk2NjIsImV4cCI6MTc0OTQwNjg2Mn0.ifauB6Qqg0REwBZ7SV3HdewZCObZ3EhMZgL5ONviZaY
 
 ### Registro de usuario con rol de user
 POST {{baseUrl}}/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "nickname": "rulas",
-  "email": "adarve529@gmail.com",
+  "nickname": "rulass",
+  "email": "rramirezsoft@gmail.com",
   "password": "1234567890"
 }
 

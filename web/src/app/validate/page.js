@@ -169,7 +169,7 @@ export default function ValidateEmailPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-[#402103] via-[#2a1d0b] to-[#1c1306] text-white p-3 rounded-lg transition-all hover:opacity-90 shadow-md text-xl font-normal"
+              className="w-full bg-gradient-to-r from-[#402103] via-[#2a1d0b] to-[#1c1306] text-white p-3 rounded-lg transition-all hover:opacity-90 shadow-md text-xl font-normal flex items-center justify-center gap-2"
             >
               {isSubmitting ? <Loading size="sm" /> : 'Verificar código'}
             </button>
