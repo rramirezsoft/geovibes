@@ -11,6 +11,7 @@ import { parseApiError } from '@/utils/parseError';
 import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import Image from 'next/image';
 import Link from 'next/link';
+import Loading from '../components/loading';
 
 const schema = z.object({
   nickname: z
@@ -129,9 +130,9 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-[#3b1d1b] via-[#2c223b] to-[#181b2c] text-white p-3 rounded-lg transition-all hover:opacity-90 shadow-md text-xl font-normal"
+              className="w-full bg-gradient-to-r from-[#3b1d1b] via-[#2c223b] to-[#181b2c] text-white p-3 rounded-lg transition-all hover:opacity-90 shadow-md text-xl font-normal flex items-center justify-center"
             >
-              Registrarse
+              {isSubmitting ? <Loading size="sm" /> : 'Registrarse'}
             </button>
           </form>
 

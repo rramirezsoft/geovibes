@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { getUser } from '@/api/user';
-import Image from 'next/image';
-import { ERROR_MESSAGES } from '@/constants/errorMessages';
-import { parseApiError } from '@/utils/parseError';
 import { logoutUser } from '@/api/auth';
+import { parseApiError } from '@/utils/parseError';
+import { ERROR_MESSAGES } from '@/constants/errorMessages';
+import Image from 'next/image';
+import Loading from '../components/loading';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -28,36 +29,36 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const accessToken = Cookies.get('accessToken');
       try {
         const userData = await getUser(accessToken);
         setUser(userData.user);
-        setLoading(false);
       } catch (err) {
         const parsed = parseApiError(err);
         setError(ERROR_MESSAGES[parsed] || parsed || ERROR_MESSAGES.DEFAULT);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchUserData();
-  }, [router]);
+  }, [accessToken]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <Loading size="lg" overlay />;
 
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-red-50 text-red-600 text-lg font-medium">
+        {error}
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-4">
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-4 flex items-center justify-center">
+      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
         <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">Dashboard</h2>
 
         <div className="flex items-center justify-center mb-6">
-          {/* Foto de perfil */}
           <Image
             src={user.profilePicture || '/img/placeholder.png'}
             alt="Foto de perfil"
@@ -68,29 +69,27 @@ export default function Dashboard() {
           />
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 text-gray-800">
           <div>
-            <strong className="text-gray-700">Nombre:</strong>
-            <p className="text-gray-900">
+            <strong>Nombre:</strong>
+            <p>
               {user.name} {user.lastName}
             </p>
           </div>
-
           <div>
-            <strong className="text-gray-700">Nickname:</strong>
-            <p className="text-gray-900">{user.nickname}</p>
+            <strong>Nickname:</strong>
+            <p>{user.nickname}</p>
           </div>
-
           <div>
-            <strong className="text-gray-700">Email:</strong>
-            <p className="text-gray-900">{user.email}</p>
+            <strong>Email:</strong>
+            <p>{user.email}</p>
           </div>
-
           <div>
-            <strong className="text-gray-700">Fecha de nacimiento:</strong>
-            <p className="text-gray-900">{new Date(user.birthDate).toLocaleDateString()}</p>
+            <strong>Fecha de nacimiento:</strong>
+            <p>{new Date(user.birthDate).toLocaleDateString()}</p>
           </div>
         </div>
+
         <div className="mt-6 text-center">
           <button
             onClick={handleLogout}
