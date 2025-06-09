@@ -1,10 +1,11 @@
 {
   "name": "geovibes-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "jest --forceExit --verbose",
-    "start": "node index.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [
     "geovibes",
@@ -34,6 +35,7 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
+    "passport-google-oauth20": "^2.0.0",
     "pdfkit": "^0.16.0",
     "redis": "^4.7.0",
     "swagger-jsdoc": "^6.2.8",

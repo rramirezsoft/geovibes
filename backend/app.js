@@ -65,10 +65,6 @@ app.use('/api/user', userRoutes);
 app.use('/api/place', placeRoutes);
 app.use('/api/userPlace', userPlaceRoutes);
 
-// Puerto
-const port = process.env.PORT || 3001;
-
-// Rutas del servidor
 // Ruta de prueba para verificar que el servidor está funcionando
 app.get('/', (req, res) => {
   res.send('API funcionando correctamente');
@@ -77,11 +73,6 @@ app.get('/', (req, res) => {
 // Health check para Render
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
-});
-
-// Iniciamos el servidor
-app.listen(port, () => {
-  console.log('Servidor escuchando en el puerto ' + port);
 });
 
 module.exports = app;
