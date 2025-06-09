@@ -24,6 +24,9 @@ const userRoutes = require('./routes/user.js');
 const placeRoutes = require('./routes/place.js');
 const userPlaceRoutes = require('./routes/userPlace.js');
 
+// Google OAuth
+const passport = require('./config/passportGoogle.js');
+
 // Inicialización de la app
 const app = express();
 
@@ -58,6 +61,9 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Permite preflight requests
 app.use(express.json());
 app.use(cookieParser());
+
+// Passport para autenticación con Google
+app.use(passport.initialize());
 
 // Rutas
 app.use('/api/auth', authRoutes);

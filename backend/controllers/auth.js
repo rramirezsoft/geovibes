@@ -9,6 +9,7 @@ const {
   resetPassword,
   refreshTokenService,
   logoutUser,
+  googleAuthService,
 } = require('../services/auth');
 
 const registerCtrl = async (req, res) => {
@@ -121,6 +122,26 @@ const logoutCtrl = async (req, res) => {
   }
 };
 
+const googleAuthCtrl = async (req, res) => {
+  try {
+    const user = req.user;
+
+    const { accessToken, refreshToken } = await googleAuthService(user);
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.redirect(`${process.env.FRONTEND_URL}/auth/success?accessToken=${accessToken}`);
+  } catch (err) {
+    console.error('❌ Error en googleAuthCtrl:', err);
+    handleHttpError(res, 'ERROR_GOOGLE_AUTH', 500);
+  }
+};
+
 module.exports = {
   registerCtrl,
   verifyEmailCtrl,
@@ -130,4 +151,5 @@ module.exports = {
   resetPasswordCtrl,
   refreshTokenCtrl,
   logoutCtrl,
+  googleAuthCtrl,
 };

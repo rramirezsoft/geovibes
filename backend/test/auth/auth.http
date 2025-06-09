@@ -44,6 +44,10 @@ Content-Type: application/json
   "password": "1234567890"
 }
 
+### Login / Registro con Google
+GET {{baseUrl}}/api/auth/google HTTP/1.1
+Accept: application/json
+
 ### Solicitar restablecimiento de contraseña
 POST {{baseUrl}}/api/auth/forgot-password HTTP/1.1
 Content-Type: application/json

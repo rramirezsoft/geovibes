@@ -276,6 +276,29 @@ const logoutUser = async (userId) => {
   }
 };
 
+/**
+ * Autentica al usuario con Google y genera tokens JWT
+ * @param {Object} user - Usuario autenticado por Google (req.user desde el middleware)
+ * @returns - {Object} - Usuario, Access Token y Refresh Token
+ */
+const googleAuthService = async (user) => {
+  try {
+    const accessToken = generateAccessToken(user);
+
+    let refreshToken = await getRefreshToken(user._id);
+    if (!refreshToken) {
+      refreshToken = generateRefreshToken(user);
+      await saveRefreshToken(user._id, refreshToken);
+    }
+
+    user.set('password', undefined, { strict: false });
+
+    return { user, accessToken, refreshToken };
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   registerUser,
   verifyUserCode,
@@ -285,4 +308,5 @@ module.exports = {
   resetPassword,
   refreshTokenService,
   logoutUser,
+  googleAuthService,
 };

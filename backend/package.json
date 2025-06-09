@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "test": "jest --forceExit --verbose",
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "dev": "nodemon server.js"
   },
   "keywords": [
@@ -35,6 +35,7 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
+    "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pdfkit": "^0.16.0",
     "redis": "^4.7.0",

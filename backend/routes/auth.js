@@ -8,6 +8,7 @@ const {
   resetPasswordCtrl,
   refreshTokenCtrl,
   logoutCtrl,
+  googleAuthCtrl,
 } = require('../controllers/auth');
 const {
   validatorRegister,
@@ -17,6 +18,7 @@ const {
   validatorResetPassword,
 } = require('../validators/auth');
 const { authMiddleware, refreshAuthMiddleware } = require('../middleware/session');
+const passport = require('../config/passportGoogle');
 
 const router = express.Router();
 
@@ -116,5 +118,7 @@ router.post('/forgot-password', validatorForgotPassword, forgotPasswordCtrl);
 router.post('/reset-password', validatorResetPassword, resetPasswordCtrl);
 router.post('/refresh', refreshAuthMiddleware, refreshTokenCtrl);
 router.post('/logout', authMiddleware, logoutCtrl);
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/google/callback', passport.authenticate('google', { session: false }), googleAuthCtrl);
 
 module.exports = router;

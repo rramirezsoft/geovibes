@@ -21,6 +21,7 @@ const schema = z.object({
 export default function LoginPage() {
   const router = useRouter();
   const [message, setMessage] = useState('');
+  const oAuthUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`;
 
   const {
     register,
@@ -111,7 +112,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-[#1d274d] via-[#2c223b] to-[#181b2c] text-white p-3 rounded-lg transition-all hover:opacity-90 shadow-md text-xl font-normal flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-[#1d274d] via-[#2c223b] to-[#181b2c] text-white p-3 rounded-lg transition-all hover:opacity-90 shadow-md text-xl font-normal flex items-center justify-center gap-2 cursor-pointer"
             >
               {isSubmitting ? <Loading size="sm" /> : 'Entrar'}
             </button>
@@ -123,7 +124,10 @@ export default function LoginPage() {
             <div className="flex-grow border-t border-blue-500"></div>
           </div>
 
-          <button className="w-full mt-4 bg-black/70 text-white p-3 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition">
+          <button
+            className="w-full mt-4 bg-black/70 text-white p-3 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition cursor-pointer"
+            onClick={() => (window.location.href = oAuthUrl)}
+          >
             <Image
               src="/img/logo/google.png"
               alt="Google Icon"
