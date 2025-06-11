@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { FaBars, FaTimes, FaUser, FaUserPlus, FaInfoCircle } from 'react-icons/fa';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [showMenu, setShowMenu] = useState(false);
@@ -37,10 +38,11 @@ export default function Navbar() {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 h-full w-[70%] max-w-[260px] z-50 transform transition-transform duration-300 ease-in-out bg-[#0e1a2bf2] backdrop-blur-md shadow-xl ${
+        className={`fixed top-0 right-0 h-full w-[65%] max-w-[240px] z-50 transform transition-transform duration-300 ease-in-out bg-[#0e1a2bf2] backdrop-blur-md ${
           showMenu ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
+        {/* Boton de cerrar */}
         <div className="flex justify-end p-4">
           <button
             onClick={() => setShowMenu(false)}
@@ -50,29 +52,50 @@ export default function Navbar() {
           </button>
         </div>
 
-        <div className="flex flex-col px-6 space-y-6 mt-6 text-white text-md">
+        {/* Header Logo */}
+        <Link
+          href="/"
+          onClick={() => setShowMenu(false)}
+          className="flex items-center px-6 space-x-3 mb-4"
+        >
+          <Image
+            src="/img/logo/geo.png"
+            alt="GeoVibes Logo"
+            width={40}
+            height={40}
+            className="h-10 w-10 object-contain"
+          />
+          <span className="text-white text-xl">GeoVibes</span>
+        </Link>
+
+        <hr className="border-gray-600 mx-6 mb-4" />
+
+        {/* Sidebar */}
+        <div className="flex flex-col px-6 text-white text-md">
           <Link
             href="/login"
             onClick={() => setShowMenu(false)}
-            className="flex items-center space-x-3 hover:text-blue-400 transition-colors"
+            className="flex items-center space-x-3 py-2 hover:text-blue-400 transition-colors"
           >
             <FaUser />
             <span>Login</span>
           </Link>
+          <hr className="border-gray-700/40 my-1" />
 
           <Link
             href="/register"
             onClick={() => setShowMenu(false)}
-            className="flex items-center space-x-3 hover:text-purple-400 transition-colors"
+            className="flex items-center space-x-3 py-2 hover:text-purple-400 transition-colors"
           >
             <FaUserPlus />
             <span>Register</span>
           </Link>
+          <hr className="border-gray-700/40 my-1" />
 
           <a
             href="#about"
             onClick={() => setShowMenu(false)}
-            className="flex items-center space-x-3 hover:text-gray-300 transition-colors"
+            className="flex items-center space-x-3 py-2 hover:text-gray-300 transition-colors"
           >
             <FaInfoCircle />
             <span>About us</span>
@@ -80,7 +103,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Fondo difuminado */}
+      {/* Blur overlay */}
       {showMenu && (
         <div
           className="fixed inset-0 bg-black/10 backdrop-blur-sm z-40 transition-opacity duration-300"
