@@ -7,7 +7,7 @@ import Footer from '@/app/components/footer';
 export default function LandingPage() {
   return (
     <div className="w-full">
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="relative w-full h-screen">
         {/* Background */}
         <div className="absolute inset-0 z-0">
@@ -29,7 +29,7 @@ export default function LandingPage() {
           />
         </div>
 
-        {/* Overlay Content */}
+        {/* Contenido */}
         <div className="relative z-10 flex flex-col h-full text-white font-baloo">
           <Navbar />
 
@@ -68,6 +68,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

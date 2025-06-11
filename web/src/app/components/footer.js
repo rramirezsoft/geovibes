@@ -2,136 +2,119 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaLinkedin, FaGithub, FaTwitter, FaGlobe } from 'react-icons/fa';
+import { FaLinkedin, FaGithub, FaInstagram, FaGlobe } from 'react-icons/fa';
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white px-6 md:px-16 pt-16 pb-10">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 text-sm">
-        {/* Company Info */}
-        <div>
+    <footer className="bg-[#0e1a2b] text-white px-6 md:px-12 pt-16 pb-10 font-baloo">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+        {/* Brand */}
+        <div className="space-y-4">
           <Image
             src="/img/logo/geovibes_logo.png"
             alt="GeoVibes Logo"
-            width={160}
-            height={80}
-            className="h-auto mb-4"
+            width={180}
+            height={90}
+            className="h-auto"
           />
-          <p className="text-gray-400">GeoVibes SL — Mark your moments, share your journey.</p>
+          <p className="text-gray-400 text-sm">
+            GeoVibes SL — Mark your moments, share your journey.
+          </p>
         </div>
 
-        {/* Quick Links */}
-        <div>
-          <h3 className="text-white font-semibold mb-3">Quick Links</h3>
-          <ul className="space-y-2 text-gray-300">
+        {/* Navegacion */}
+        <div className="space-y-2">
+          <h4 className="text-white text-base font-semibold mb-2">Explore</h4>
+          <ul className="text-gray-300 text-sm space-y-1">
             <li>
-              <Link href="/login" className="hover:underline">
+              <Link href="/login" className="hover:text-white transition-colors">
                 Login
               </Link>
             </li>
             <li>
-              <Link href="/register" className="hover:underline">
+              <Link href="/register" className="hover:text-white transition-colors">
                 Register
               </Link>
             </li>
             <li>
-              <Link href="#about" className="hover:underline">
-                About Us
-              </Link>
-            </li>
-            <li>
-              <Link href="#features" className="hover:underline">
-                Features
+              <Link href="#about" className="hover:text-white transition-colors">
+                About us
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Support & Legal */}
-        <div>
-          <h3 className="text-white font-semibold mb-3">Support</h3>
-          <ul className="space-y-2 text-gray-300">
+        {/* Legal */}
+        <div className="space-y-2">
+          <h4 className="text-white text-base font-semibold mb-2">Legal</h4>
+          <ul className="text-gray-300 text-sm space-y-1">
             <li>
-              <a href="mailto:support@geovibes.com" className="hover:underline">
-                support@geovibes.com
-              </a>
-            </li>
-            <li>
-              <Link href="/terms" className="hover:underline">
+              <Link href="/terms" className="hover:text-white transition-colors">
                 Terms of Service
               </Link>
             </li>
             <li>
-              <Link href="/privacy" className="hover:underline">
+              <Link href="/privacy" className="hover:text-white transition-colors">
                 Privacy Policy
               </Link>
             </li>
             <li>
-              <Link href="/cookies" className="hover:underline">
+              <Link href="/cookies" className="hover:text-white transition-colors">
                 Cookie Policy
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Socials */}
-        <div>
-          <h3 className="text-white font-semibold mb-3">Connect</h3>
-          <ul className="space-y-2 text-gray-300">
-            <li>
-              <a
-                href="https://linkedin.com/in/rramirezsoft"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:underline"
-              >
-                <FaLinkedin /> LinkedIn
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://github.com/rramirezsoft"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:underline"
-              >
-                <FaGithub /> GitHub
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://twitter.com/rramirezsoft"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:underline"
-              >
-                <FaTwitter /> Twitter
-              </a>
-            </li>
-            <li>
-              <a
-                href="http://rramirezsoft.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:underline"
-              >
-                <FaGlobe /> rramirezsoft.com
-              </a>
-            </li>
-          </ul>
+        {/* Contacto + Redes sociales */}
+        <div className="space-y-3">
+          <h4 className="text-white text-base font-semibold mb-2">Connect</h4>
+          <p className="text-gray-300 text-sm">
+            <a href="mailto:support@geovibes.com" className="hover:underline">
+              support@geovibes.com
+            </a>
+          </p>
+          <div className="flex space-x-4 text-xl text-gray-400">
+            <a
+              href="https://linkedin.com/in/rramirezsoft"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white"
+            >
+              <FaLinkedin />
+            </a>
+            <a
+              href="https://github.com/rramirezsoft"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white"
+            >
+              <FaGithub />
+            </a>
+            <a>
+              <FaInstagram />
+            </a>
+            <a
+              href="http://rramirezsoft.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white"
+            >
+              <FaGlobe />
+            </a>
+          </div>
         </div>
       </div>
 
-      {/* Bottom Footer */}
-      <div className="border-t border-gray-800 mt-10 pt-6 text-xs text-center text-gray-500">
+      <div className="mt-12 border-t border-gray-700 pt-6 text-center text-xs text-gray-500">
         <p>© {new Date().getFullYear()} GeoVibes SL. All rights reserved.</p>
-        <p>
+        <p className="mt-1">
           Developed by{' '}
           <a
             href="https://www.linkedin.com/in/raul-ramirez-adarve/"
-            className="text-white hover:underline"
             target="_blank"
             rel="noopener noreferrer"
+            className="text-white hover:underline"
           >
             rramirezsoft
           </a>
