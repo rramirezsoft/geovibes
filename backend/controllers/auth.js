@@ -24,7 +24,7 @@ const registerCtrl = async (req, res) => {
     if (err.status === 409) {
       handleHttpError(res, err.message, 409);
     } else {
-      handleHttpError(res, 'ERROR_CREATE_USER', 500);
+      handleHttpError(res, err.message, err.status || 500);
     }
   }
 };
@@ -138,7 +138,7 @@ const googleAuthCtrl = async (req, res) => {
     res.redirect(`${process.env.FRONTEND_URL}/auth/success?accessToken=${accessToken}`);
   } catch (err) {
     console.error('❌ Error en googleAuthCtrl:', err);
-    handleHttpError(res, 'ERROR_GOOGLE_AUTH', 500);
+    res.redirect(`${process.env.FRONTEND_URL}/auth/error?error=${err.message}`);
   }
 };
 

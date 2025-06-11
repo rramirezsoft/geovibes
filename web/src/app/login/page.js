@@ -12,6 +12,7 @@ import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import Image from 'next/image';
 import Link from 'next/link';
 import Loading from '../components/loading';
+import ForgotPasswordModal from './components/forgotPasswordModal';
 
 const schema = z.object({
   email: z.string().email('Email inválido'),
@@ -22,6 +23,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [message, setMessage] = useState('');
   const oAuthUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`;
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 
   const {
     register,
@@ -147,9 +149,12 @@ export default function LoginPage() {
           </p>
 
           <p className="text-center text-sm text-blue-300 mt-2">
-            <Link href="/forgot-password" className="hover:underline">
+            <button
+              onClick={() => setShowForgotPasswordModal(true)}
+              className="hover:underline text-blue-300"
+            >
               ¿Olvidaste tu contraseña?
-            </Link>
+            </button>
           </p>
         </div>
       </div>
@@ -165,6 +170,11 @@ export default function LoginPage() {
         />
         <div className="absolute inset-0 bg-black/30 z-10" />
       </div>
+
+      <ForgotPasswordModal
+        isOpen={showForgotPasswordModal}
+        onClose={() => setShowForgotPasswordModal(false)}
+      />
     </div>
   );
 }

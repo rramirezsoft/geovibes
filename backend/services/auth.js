@@ -10,6 +10,11 @@ const {
 const { sendEmail } = require('../utils/handleEmail');
 const crypto = require('crypto');
 const { generateVerificationCode } = require('../utils/generateCode');
+const BLOCKED_EMAILS = require('../constants/blockedEmails');
+const {
+  verificationEmailTemplate,
+  resetPasswordEmailTemplate,
+} = require('../utils/emailTemplates');
 
 /**
  * Registra un usuario en la base de datos
@@ -18,6 +23,10 @@ const { generateVerificationCode } = require('../utils/generateCode');
  */
 const registerUser = async (userData) => {
   try {
+    // Verifica si el email está bloqueado
+    if (BLOCKED_EMAILS.includes(userData.email)) {
+      throw { status: 403, message: 'EMAIL_NOT_ALLOWED' };
+    }
     // Encripta la contraseña
     const hashedPassword = await encrypt(userData.password);
 
@@ -38,18 +47,7 @@ const registerUser = async (userData) => {
       subject: 'Verifica tu cuenta en GeoVibes 🌍',
       to: userData.email,
       from: process.env.EMAIL,
-      html: `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; background: #f9f9f9; padding: 30px; border-radius: 10px;">
-      <h2 style="color: #1d274d;">¡Bienvenido a <span style="color: #8f4de3;">GeoVibes</span>! 🌍</h2>
-      <p>Gracias por registrarte. Para completar tu registro, introduce este código en la aplicación:</p>
-      <div style="font-size: 24px; font-weight: bold; background: #1d274d; color: white; padding: 10px 20px; display: inline-block; border-radius: 6px;">
-        ${newUser.verificationCode}
-      </div>
-      <p style="margin-top: 20px;">Si tú no solicitaste este registro, puedes ignorar este correo.</p>
-      <hr style="margin: 40px 0;" />
-      <p style="font-size: 12px; color: #888;">Este correo fue enviado automáticamente por el sistema de verificación de GeoVibes.</p>
-    </div>
-  `,
+      html: verificationEmailTemplate(newUser.verificationCode),
     });
 
     // Devuelve el usuario y el token
@@ -83,6 +81,8 @@ const verifyUserCode = async (user, code) => {
     if (user.verificationCode !== code) {
       user.verificationAttempts -= 1;
       await user.save();
+
+      // TODO: arreglar el tema de los intentos de verificación
 
       if (user.verificationAttemps <= 0) {
         throw { status: 403, message: 'TOO_MANY_ATTEMPTS' };
@@ -119,10 +119,10 @@ const resendVerificationCode = async (user) => {
 
     // Envia email de verificación
     sendEmail({
-      subject: 'Bienvenido a la API',
-      text: user.verificationCode,
-      from: process.env.EMAIL,
+      subject: 'Verifica tu cuenta en GeoVibes 🌍',
       to: user.email,
+      from: process.env.EMAIL,
+      html: verificationEmailTemplate(user.verificationCode),
     });
 
     return { message: 'VERIFICATION_CODE_SENT_SUCCESSFULLY' };
@@ -185,6 +185,11 @@ const forgotPassword = async (email) => {
     const user = await User.findOne({ email });
     if (!user) throw { status: 404, message: 'USER_NOT_FOUND' };
 
+    // Comprobamos que el usuario no esté registrado con Google
+    if (!user.password) {
+      throw { status: 403, message: 'GOOGLE_ACCOUNT_NOT_SUPPORTED' };
+    }
+
     // Generamos un token único de 32 bytes y 1 hora de expiración
     const resetToken = crypto.randomBytes(32).toString('hex');
     const tokenExpiration = Date.now() + 3600000; // 1 hora
@@ -199,19 +204,8 @@ const forgotPassword = async (email) => {
     await sendEmail({
       to: user.email,
       subject: 'Restablecimiento de contraseña',
-      text: `
-                Hola ${user.nickname},
-
-                Hemos recibido una solicitud para restablecer tu contraseña. 
-                
-                Haz clic en el siguiente enlace para cambiarla:
-                
-                ${resetLink}
-                
-                Este enlace expirará en 1 hora. 
-                
-                Si no fuiste tú, ignora este mensaje.
-            `,
+      from: process.env.EMAIL,
+      html: resetPasswordEmailTemplate(user.nickname, resetLink),
     });
 
     return { message: 'EMAIL_SENT' };
@@ -233,6 +227,12 @@ const resetPassword = async (token, password) => {
     });
 
     if (!user) throw { status: 400, message: 'INVALID_OR_EXPIRED_TOKEN' };
+
+    // verificamos que la nueva contraseña no sea igual a la actual
+    const isSamePassword = await compare(password, user.password);
+    if (isSamePassword) {
+      throw { status: 400, message: 'SAME_PASSWORD' };
+    }
 
     // Encriptamos la nueva contraseña
     const hashedPassword = await encrypt(password);
@@ -283,6 +283,13 @@ const logoutUser = async (userId) => {
  */
 const googleAuthService = async (user) => {
   try {
+    if (!user) {
+      throw { status: 401, message: 'GOOGLE_AUTH_FAILED' };
+    }
+    // Verificamos si el correo está bloqueado
+    if (BLOCKED_EMAILS.includes(user.email)) {
+      throw { status: 403, message: 'EMAIL_NOT_ALLOWED' };
+    }
     const accessToken = generateAccessToken(user);
 
     let refreshToken = await getRefreshToken(user._id);

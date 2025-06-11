@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2ViYjk4OTE3YTMyNjdiYzQ0M2FiNDUiLCJpYXQiOjE3NDM1NTAyOTEsImV4cCI6MTc0MzU1NzQ5MX0.weupkvsaP5GaTNDSmQU2HiAT7xydUMqcYwph8qiCBVo
+@accessToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODQ3MDVmNjEzMGE1MDMzNDIzNjk3ZDAiLCJpYXQiOjE3NDk1NTEzMzYsImV4cCI6MTc0OTU1ODUzNn0.QnXlBu2BfaUx2RRYwZmwtyACDdTVLwHRjw19Rzob04s
 
 ### Completar registro de usuario
 PUT {{baseUrl}}/api/user/complete-register HTTP/1.1

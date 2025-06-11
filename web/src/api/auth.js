@@ -50,6 +50,32 @@ export async function loginUser({ email, password }) {
   return { ...data, accessToken };
 }
 
+// ENDPOINT: /api/auth/forgot-password
+export async function requestPasswordReset(email) {
+  const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  return apiResponse(response, 'Error al solicitar el restablecimiento de contraseña');
+}
+
+// ENDPOINT: /api/auth/reset-password
+export async function resetPassword({ token, password }) {
+  const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token, password }),
+  });
+
+  return apiResponse(response, 'Error al restablecer la contraseña');
+}
+
 // ENDPOINT: /api/auth/refresh
 export async function refreshAccessToken() {
   const response = await fetch(`${API_BASE_URL}/auth/refresh`, {

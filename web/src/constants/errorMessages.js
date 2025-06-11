@@ -23,4 +23,11 @@ export const ERROR_MESSAGES = {
   INVALID_OR_EXPIRED_TOKEN: 'El enlace ha expirado o no es válido.',
   // Fallback
   DEFAULT: 'Ocurrió un error inesperado. Intenta de nuevo más tarde.',
+  // Blocked emails
+  EMAIL_NOT_ALLOWED: 'Email proporcionado no permitido. Por favor, utiliza un email diferente.',
+  // Google Auth
+  GOOGLE_ACCOUNT_NOT_SUPPORTED:
+    'No puedes cambiar tu contraseña porque te registraste con Google. Por favor, inicia sesión con tu cuenta de Google.',
+  // Same password
+  SAME_PASSWORD: 'La nueva contraseña no puede ser la misma que la actual.',
 };
