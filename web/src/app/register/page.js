@@ -50,12 +50,15 @@ export default function RegisterPage() {
       formData.append('password', data.password);
 
       const result = await registerUser(formData);
+      console.log('Registro exitoso:', result);
 
-      if (result.accessToken) {
+      if (result.accessToken && result.user.email) {
         Cookies.set('accessToken', result.accessToken, { secure: true });
+        Cookies.set('pendingEmail', data.email, { secure: true });
+        router.push('/validate');
+      } else {
+        setMessage('Error al registrar el usuario. Por favor, inténtalo de nuevo.');
       }
-
-      router.push('/validate');
     } catch (err) {
       const parsed = parseApiError(err);
       setMessage(ERROR_MESSAGES[parsed] || parsed || ERROR_MESSAGES.DEFAULT);

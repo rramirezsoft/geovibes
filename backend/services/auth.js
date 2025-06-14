@@ -79,12 +79,12 @@ const verifyUserCode = async (user, code) => {
     }
 
     if (user.verificationCode !== code) {
-      user.verificationAttempts -= 1;
-      await user.save();
+      if (user.verificationAttempts > 0) {
+        user.verificationAttempts -= 1;
+        await user.save();
+      }
 
-      // TODO: arreglar el tema de los intentos de verificación
-
-      if (user.verificationAttemps <= 0) {
+      if (user.verificationAttempts <= 0) {
         throw { status: 403, message: 'TOO_MANY_ATTEMPTS' };
       }
 

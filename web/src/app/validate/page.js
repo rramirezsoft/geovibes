@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
-import { verifyEmail } from '@/api/auth';
+import { verifyEmail, resendVerificationCode } from '@/api/auth';
 import { parseApiError } from '@/utils/parseError';
 import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import Image from 'next/image';
@@ -22,6 +22,7 @@ const schema = z.object({
 export default function ValidateEmailPage() {
   const router = useRouter();
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('error');
   const [resendCountdown, setResendCountdown] = useState(30);
   const inputRefs = useRef([]);
   const email = Cookies.get('pendingEmail');
@@ -98,13 +99,29 @@ export default function ValidateEmailPage() {
     } catch (err) {
       const parsed = parseApiError(err);
       setMessage(ERROR_MESSAGES[parsed] || parsed || ERROR_MESSAGES.DEFAULT);
+      setMessageType('error');
     }
   };
 
-  const handleResend = () => {
-    // TODO: lógica real de reenvío
-    setMessage('Código reenviado.');
-    setResendCountdown(30);
+  const handleResend = async () => {
+    setMessage('');
+    const accessToken = Cookies.get('accessToken');
+
+    if (!accessToken) {
+      setMessage('No se encontró el token de acceso. Intenta iniciar sesión nuevamente.');
+      setMessageType('error');
+      return;
+    }
+
+    try {
+      await resendVerificationCode(accessToken);
+      setMessage('Código reenviado con éxito. Revisa tu correo.');
+      setMessageType('info');
+      setResendCountdown(30);
+    } catch (err) {
+      const parsed = parseApiError(err);
+      setMessage(ERROR_MESSAGES[parsed] || parsed || ERROR_MESSAGES.DEFAULT);
+    }
   };
 
   return (
@@ -186,10 +203,14 @@ export default function ValidateEmailPage() {
             </button>
           </div>
 
-          {message && (
+          {message && messageType === 'error' && (
             <div className="bg-red-100 text-red-700 p-3 mt-4 rounded-md text-sm text-center">
               {message}
             </div>
+          )}
+
+          {message && messageType === 'info' && (
+            <p className="text-sm text-orange-200 text-center mt-4">{message}</p>
           )}
         </div>
       </div>

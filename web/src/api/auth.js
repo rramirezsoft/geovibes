@@ -34,6 +34,18 @@ export async function verifyEmail(verificationCode, accessToken) {
   return apiResponse(response, 'Error al verificar el email');
 }
 
+//ENDPOINT: /api/aurth/resend-code
+export async function resendVerificationCode(accessToken) {
+  const response = await fetch(`${API_BASE_URL}/auth/resend-code`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return apiResponse(response, 'Error al reenviar el código de verificación');
+}
+
 // ENDPOINT: /api/auth/login
 export async function loginUser({ email, password }) {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {

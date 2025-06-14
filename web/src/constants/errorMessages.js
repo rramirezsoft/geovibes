@@ -4,7 +4,8 @@ export const ERROR_MESSAGES = {
   EMAIL_ALREADY_EXISTS: 'El email ya está en uso.',
   // validate email
   EMAIL_ALREADY_VERIFIED: 'Tu email ya ha sido verificado.',
-  TOO_MANY_ATTEMPTS: 'Has superado el número máximo de intentos. Vuelve a registrarte.',
+  TOO_MANY_ATTEMPTS:
+    'Has superado el número máximo de intentos. Espera 2 horas para volver a registrarte.',
   INVALID_VERIFICATION_CODE: 'Código incorrecto. Intenta de nuevo.',
   // Login
   INVALID_CREDENTIALS: 'Email o contraseña incorrectos.',
