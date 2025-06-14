@@ -12,6 +12,7 @@ import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import Image from 'next/image';
 import Link from 'next/link';
 import Loading from '../components/loading';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const schema = z.object({
   nickname: z
@@ -29,6 +30,7 @@ const schema = z.object({
 export default function RegisterPage() {
   const router = useRouter();
   const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const oAuthUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`;
 
   const {
@@ -119,13 +121,23 @@ export default function RegisterPage() {
             />
             {errors.email && <p className="text-red-400 text-sm">{errors.email.message}</p>}
 
-            <input
-              type="password"
-              placeholder="Contraseña"
-              required
-              {...register('password')}
-              className="w-full p-3 rounded-lg bg-[#2b1e1e]/80 text-white border border-orange-500 placeholder-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Contraseña"
+                required
+                {...register('password')}
+                className="w-full p-3 pr-10 rounded-lg bg-[#2b1e1e]/80 text-white border border-orange-500 placeholder-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-3 flex items-center text-orange-300 hover:text-orange-100"
+                tabIndex={-1}
+              >
+                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              </button>
+            </div>
             {errors.password && <p className="text-red-400 text-sm">{errors.password.message}</p>}
 
             <button

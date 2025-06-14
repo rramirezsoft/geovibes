@@ -13,6 +13,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Loading from '../components/loading';
 import ForgotPasswordModal from './components/forgotPasswordModal';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const schema = z.object({
   email: z.string().email('Email inválido'),
@@ -23,6 +24,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [message, setMessage] = useState('');
   const oAuthUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`;
+  const [showPassword, setShowPassword] = useState(false);
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 
   const {
@@ -102,13 +104,24 @@ export default function LoginPage() {
             />
             {errors.email && <p className="text-red-400 text-sm">{errors.email.message}</p>}
 
-            <input
-              type="password"
-              placeholder="Contraseña"
-              required
-              {...register('password')}
-              className="w-full p-3 rounded-lg bg-[#1f2b3a]/80 text-white border border-blue-500 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+            {/* Password con icono */}
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Contraseña"
+                required
+                {...register('password')}
+                className="w-full p-3 pr-10 rounded-lg bg-[#1f2b3a]/80 text-white border border-blue-500 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-300 hover:text-blue-100 transition"
+                tabIndex={-1}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
             {errors.password && <p className="text-red-400 text-sm">{errors.password.message}</p>}
 
             <button

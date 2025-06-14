@@ -9,6 +9,7 @@ import { resetPassword } from '@/api/auth';
 import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import { parseApiError } from '@/utils/parseError';
 import Loading from '@/app/components/loading';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const schema = z
   .object({
@@ -30,6 +31,8 @@ export default function ResetPasswordPage() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState(null);
   const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -88,22 +91,42 @@ export default function ResetPasswordPage() {
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <input
-            type="password"
-            placeholder="Nueva contraseña"
-            required
-            {...register('password')}
-            className="w-full p-3 rounded-lg bg-[#2b3c4d]/90 text-white border border-blue-500 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Nueva contraseña"
+              required
+              {...register('password')}
+              className="w-full p-3 pr-10 rounded-lg bg-[#2b3c4d]/90 text-white border border-blue-500 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute inset-y-0 right-3 flex items-center text-blue-300 hover:text-blue-100"
+              tabIndex={-1}
+            >
+              {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+            </button>
+          </div>
           {errors.password && <p className="text-red-400 text-sm">{errors.password.message}</p>}
 
-          <input
-            type="password"
-            placeholder="Confirmar contraseña"
-            required
-            {...register('confirmPassword')}
-            className="w-full p-3 rounded-lg bg-[#2b3c4d]/90 text-white border border-blue-500 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              placeholder="Confirmar contraseña"
+              required
+              {...register('confirmPassword')}
+              className="w-full p-3 pr-10 rounded-lg bg-[#2b3c4d]/90 text-white border border-blue-500 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+              className="absolute inset-y-0 right-3 flex items-center text-blue-300 hover:text-blue-100"
+              tabIndex={-1}
+            >
+              {showConfirmPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+            </button>
+          </div>
           {errors.confirmPassword && (
             <p className="text-red-400 text-sm">{errors.confirmPassword.message}</p>
           )}
