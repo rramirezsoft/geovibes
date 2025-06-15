@@ -29,10 +29,13 @@ export async function authFetch(url, options = {}, retry = true) {
     Authorization: `Bearer ${accessToken}`,
   };
 
-  // Si el método requiere body, añadimos Content-Type
+  // Si el método requiere body, aseguramos que el Content-Type sea correcto
   const method = (options.method || 'GET').toUpperCase();
   if (['POST', 'PUT', 'PATCH'].includes(method)) {
-    headers['Content-Type'] = 'application/json';
+    const isFormData = options.body instanceof FormData;
+    if (!isFormData) {
+      headers['Content-Type'] = 'application/json';
+    }
   }
 
   let response = await fetch(url, {

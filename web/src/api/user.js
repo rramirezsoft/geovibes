@@ -11,3 +11,13 @@ export async function getUser() {
 
   return apiResponse(response, 'Error al obtener el usuario');
 }
+
+// ENDPOINT: /api/profile-picture (PATCH)
+export async function uploadProfilePicture(formData) {
+  const response = await authFetch(`${API_BASE_URL}/user/profile-picture`, {
+    method: 'PATCH',
+    body: formData,
+  });
+
+  return apiResponse(response, 'Error al subir la foto de perfil');
+}
